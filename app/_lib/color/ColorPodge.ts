@@ -60,6 +60,10 @@ export class ColorPodge {
         return new ColorPodge(newColors, this.neverSettle)
     }
 
+    sort(comparator: (a: DriftColor, b: DriftColor) => number): ColorPodge {
+        return new ColorPodge(this.driftColors.toSorted(comparator))
+    }
+
     // random walk
     drift(f: number): ColorPodge {
         // reset settlement tracking because colors have been shuffled
