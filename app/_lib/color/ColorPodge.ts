@@ -42,6 +42,10 @@ export class ColorPodge {
         readonly dispersionHistory: ReadonlyArray<number> = [],
     ) {}
 
+    get length() {
+        return this.driftColors.length
+    }
+
     addRandomColor(): ColorPodge {
         // reset settlement tracking because a new color is in the mix
         return new ColorPodge(

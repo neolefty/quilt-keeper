@@ -42,6 +42,7 @@ export class CieColor {
         this._hsluv.hsluv_s = hsl[1]
         this._hsluv.hsluv_l = hsl[2]
         this._hsluv.hsluvToLch()
+        this._hsluv.hsluvToHex()
         this.lch = [this._hsluv.lch_l, this._hsluv.lch_c, this._hsluv.lch_h]
     }
 
