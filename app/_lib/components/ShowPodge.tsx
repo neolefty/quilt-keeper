@@ -1,39 +1,25 @@
-"use client"
-
-import { ColorPodge } from "../_lib/color/ColorPodge"
-import { useCallback, useEffect, useState } from "react"
+import { useColorPodge } from "../state/WithColorPodge"
 
 export const ShowPodge = () => {
-    const [podge, setPodge] = useState(new ColorPodge())
-    const updatePodge = useCallback((newPodge: ColorPodge) => {
-        const sortedPodge = newPodge.sort((a, b) => a.hue - b.hue)
-        setPodge(sortedPodge)
-    }, [])
-    useEffect(() => {
-        // start with three colors
-        if (podge.length === 0)
-            updatePodge(
-                podge.addRandomColor().addRandomColor().addRandomColor(),
-            )
-    }, [podge, updatePodge])
+    const { podge, setPodge, sortPodge } = useColorPodge()
     return (
         <div className="grid gap-3">
             <div className="grid grid-cols-4 gap-3">
                 <button
                     className="btn btn-primary"
-                    onClick={() => updatePodge(podge.disperse(2))}
+                    onClick={() => sortPodge(podge.disperse(2))}
                 >
                     Step 2
                 </button>
                 <button
                     className="btn btn-primary"
-                    onClick={() => updatePodge(podge.disperse(5))}
+                    onClick={() => sortPodge(podge.disperse(5))}
                 >
                     Step 5
                 </button>
                 <button
                     className="btn btn-primary"
-                    onClick={() => updatePodge(podge.disperse(12))}
+                    onClick={() => sortPodge(podge.disperse(12))}
                 >
                     Step 12
                 </button>
