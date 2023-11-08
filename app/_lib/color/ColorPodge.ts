@@ -60,6 +60,18 @@ export class ColorPodge {
         return new ColorPodge(newColors, this.neverSettle)
     }
 
+    replaceColor(idx: number, color: DriftColor): ColorPodge {
+        const newColors = [...this.driftColors]
+        newColors[idx] = color
+        return new ColorPodge(newColors, this.neverSettle)
+    }
+
+    setPinned(idx: number, pinned: boolean): ColorPodge {
+        const color = this.driftColors[idx]
+        if (color.isPinned === pinned) return this
+        else return this.replaceColor(idx, color.setPinned(pinned))
+    }
+
     sort(comparator: (a: DriftColor, b: DriftColor) => number): ColorPodge {
         return new ColorPodge(this.driftColors.toSorted(comparator))
     }
@@ -92,9 +104,12 @@ export class ColorPodge {
             )
 
         // not settled, so disperse again
-        const newDispHist = [...this.dispersionHistory, this.closestTwo()]
-        if (newDispHist.length > ColorPodge.MAX_DISPERSION_HISTORY)
-            newDispHist.splice(0, 1)
+        const newDispersionHistory = [
+            ...this.dispersionHistory,
+            this.closestTwo(),
+        ]
+        if (newDispersionHistory.length > ColorPodge.MAX_DISPERSION_HISTORY)
+            newDispersionHistory.splice(0, 1)
         const newColors = this.driftColors.map((color) =>
             this.disperseOne(color, stepSize),
         )
@@ -102,7 +117,7 @@ export class ColorPodge {
             newColors,
             this.neverSettle,
             newSettled,
-            newDispHist,
+            newDispersionHistory,
         )
         // console.log(`${Math.round(before)} -- drift ${f} -- ${result.toString()}`);
         // console.log(`${this.toString()} -- drift ${f} -- ${result.toString()}`);
@@ -142,9 +157,14 @@ export class ColorPodge {
     }
     /* tslint:enable */
 
-    // try moving color a distance f in each of 6 directions and return the one with the
-    // largest minimum distance from all other colors
+    /**
+     * Try moving color a distance f in each of 6 directions and return the one
+     * with the largest minimum distance from all other colors.
+     * No effect if color.isPinned.
+     */
     disperseOne(color: DriftColor, f: number): DriftColor {
+        if (color.isPinned) return color
+
         let result = color
         let maxMinDist = this.minDist(color)
         ColorPodge.HSV_DELTAS.forEach((delta) => {

@@ -51,9 +51,13 @@ export class DriftColor {
 
     constructor(
         readonly cie: CieColor,
+        /** A locally unique ID that follows this color as it drifts. */
         readonly key: number = Math.random(),
+        /** Should this color drift with the others (false) or stay where it is and let the others drift around it (true)? */
+        readonly isPinned: boolean = false,
     ) {}
 
+    /** Using the CIE perceptual color space, create a new color with randomly shifted hue, saturation, and lightness but the same key. */
     drift(f: number) {
         return new DriftColor(
             new CieColor([
@@ -62,6 +66,7 @@ export class DriftColor {
                 DriftColor.clamp_bright(this.cie.hsl[2] + Math.random() * f),
             ]),
             this.key,
+            this.isPinned,
         )
     }
 
@@ -74,6 +79,7 @@ export class DriftColor {
                 DriftColor.clamp_bright(unit[2] * mag + this.cie.hsl[2]),
             ]),
             this.key,
+            this.isPinned,
         )
     }
 
@@ -84,6 +90,11 @@ export class DriftColor {
     // sum of squares distance using HSL
     hslD2(that: DriftColor): number {
         return this.cie.hslDistance2(that.cie)
+    }
+
+    setPinned(pinned: boolean): DriftColor {
+        if (pinned === this.isPinned) return this
+        else return new DriftColor(this.cie, this.key, pinned)
     }
 
     // sum of squares distance using CIE LCH
@@ -113,7 +124,11 @@ export class DriftColor {
                               ? DriftColor.MIN_BRIGHT - 5
                               : DriftColor.MAX_BRIGHT + 5,
                       ]
-            this._contrast = new DriftColor(new CieColor(hsl), 1 - this.key)
+            this._contrast = new DriftColor(
+                new CieColor(hsl),
+                1 - this.key,
+                this.isPinned,
+            )
         }
         return this._contrast
     }
@@ -155,6 +170,7 @@ export class DriftColor {
                 new DriftColor(
                     this.cie.withLightness(lightness),
                     this.key * (lightness / 100),
+                    this.isPinned,
                 ),
             )
         return this.lightCache.get(lightness) as DriftColor
