@@ -1,10 +1,10 @@
-import { DriftColor } from "../color/DriftColor"
-import { useColorPodge } from "../state/WithColorPodge"
 import { useCallback } from "react"
 import Image from "next/image"
-import pinCircle from "../../../public/pin-circle.svg"
-import pinnedCircle from "../../../public/pinned-circle.svg"
-import trash from "../../../public/trash.svg"
+import pinCircle from "../../../../public/pin-circle.svg"
+import pinnedCircle from "../../../../public/pinned-circle.svg"
+import trash from "../../../../public/trash.svg"
+import { DriftColor } from "../DriftColor"
+import { useColorPodge } from "../state/WithColorPodge"
 
 export const PodgeColorCard = ({
     color,

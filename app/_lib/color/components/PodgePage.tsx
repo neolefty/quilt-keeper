@@ -1,7 +1,7 @@
 "use client"
 
-import { WithColorPodge } from "../state/WithColorPodge"
 import { ShowPodge } from "./ShowPodge"
+import { WithColorPodge } from "../state/WithColorPodge"
 
 export const PodgePage = () => (
     <WithColorPodge defaultCount={3}>

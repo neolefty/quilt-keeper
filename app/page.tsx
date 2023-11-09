@@ -1,4 +1,4 @@
-import { PodgePage } from "./_lib/components/PodgePage"
+import { PodgePage } from "./_lib/color/components/PodgePage"
 
 export default function Home() {
     return (

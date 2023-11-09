@@ -1,4 +1,3 @@
-import { ColorPodge } from "../color/ColorPodge"
 import {
     createContext,
     PropsWithChildren,
@@ -8,6 +7,7 @@ import {
     useMemo,
     useState,
 } from "react"
+import { ColorPodge } from "../ColorPodge"
 
 interface ColorPodgeState {
     podge: ColorPodge
