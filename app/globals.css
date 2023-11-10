@@ -25,3 +25,7 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+hr {
+  border-color: rgb(var(--foreground-rgb));
+}

@@ -3,7 +3,7 @@ import { useColorPodge } from "../state/WithColorPodge"
 export const PodgeControls = () => {
     const { setPodge, podge, sortPodge } = useColorPodge()
     return (
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3">
             <button
                 className="btn btn-primary"
                 onClick={() => sortPodge(podge.disperse(2))}
