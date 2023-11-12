@@ -1,4 +1,4 @@
-import { Square, Tile } from "../square/Square"
+import { isMoreSquares, Square, TemplatePath, Tile } from "../square/Square"
 import {
     createContext,
     PropsWithChildren,
@@ -39,6 +39,29 @@ const defaultQuiltState: QuiltState = {
 
 const QuiltContext = createContext<QuiltState>(defaultQuiltState)
 
+/** Assign random colors to all tiles in a quilt. */
+const redistributeColors = ({ tiles }: Square, colors: ColorPodge): Square => {
+    if (isMoreSquares(tiles)) {
+        return {
+            tiles: tiles.map((column) =>
+                column.map((square) => redistributeColors(square, colors)),
+            ) as Square["tiles"], // cast to reassure about non-empty arrays
+        }
+    } else {
+        return {
+            tiles: [
+                {
+                    ...tiles[0],
+                    groupColorMap: assignRandomColors(
+                        tiles[0].template.paths,
+                        colors,
+                    ),
+                },
+            ],
+        }
+    }
+}
+
 export const QuiltProvider = ({
     defaultQuiltSize = [3, 5],
     children,
@@ -54,10 +77,11 @@ export const QuiltProvider = ({
         () => ({
             quilt,
             setQuilt,
-            redistributeColors: () => setQuilt(defaultQuiltState.quilt),
             resetPattern: () => setQuilt(defaultQuiltState.quilt),
+            redistributeColors: () =>
+                setQuilt(redistributeColors(quilt, colors)),
         }),
-        [quilt],
+        [colors, quilt],
     )
     return (
         <QuiltContext.Provider value={quiltState}>
@@ -89,13 +113,10 @@ const createRandomQuilt = (
     const tiles: Square[][] = numberRange(0, width).map((x) =>
         numberRange(0, height).map((y) => {
             const template = randomValue(templates)
+            let groupColorMap: Tile["groupColorMap"] = {}
             const tile: Tile = {
-                groupColorMap: Object.fromEntries(
-                    template.paths.map(({ group }) => [
-                        group,
-                        podge.pickRandom().key,
-                    ]),
-                ),
+                groupColorMap: assignRandomColors(template.paths, podge),
+                rotation: Math.floor(Math.random() * 4) * 90,
                 template,
             }
             return {
@@ -106,6 +127,32 @@ const createRandomQuilt = (
     return {
         tiles: tiles as Square["tiles"],
     }
+}
+
+function shuffle<T>(items: T[]): T[] {
+    const result = [...items]
+    result.forEach((_, i) => {
+        const temp = result[i]
+        const j = Math.floor(Math.random() * i)
+        result[i] = result[j]
+        result[j] = temp
+    })
+    return result
+}
+
+const assignRandomColors = (
+    paths: ReadonlyArray<TemplatePath>,
+    podge: ColorPodge,
+): Tile["groupColorMap"] => {
+    const allColors = podge.driftColors.map((c) => c.key)
+    let remainingColors: number[] = []
+    return Object.fromEntries(
+        paths.map(({ group }) => {
+            if (remainingColors.length === 0)
+                remainingColors = shuffle(allColors)
+            return [group, remainingColors.pop()!]
+        }),
+    )
 }
 
 export const useQuilt = () => useContext(QuiltContext)

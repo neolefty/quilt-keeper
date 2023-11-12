@@ -11,7 +11,6 @@ export const ShowQuilt = () => {
     const [width, height] = isMoreSquares(tiles)
         ? [tiles.length, tiles[0].length]
         : [1, 1]
-    console.log({ width, height, tiles })
     return (
         <svg
             className="max-h-full max-w-full quiltArea"
