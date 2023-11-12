@@ -5,7 +5,8 @@ interface DistCache {
     [key: number]: TwoD
 }
 
-// A collection of colors in CIE space
+// A collection of colors in CIE space — a perceptual color space
+// — that can disperse themselves to be roughly equidistant.
 export class ColorPodge {
     static readonly HSV_DELTAS: ReadonlyArray<ThreeD> = [
         // index 1 is larger because LCh Chroma is scaled down saturation
@@ -214,5 +215,12 @@ export class ColorPodge {
             (dc) => (result = result + `; ${dc.hslString}`),
         )
         return result
+    }
+
+    pickRandom(): DriftColor {
+        if (this.length === 0) throw new Error("empty podge")
+        return this.driftColors[
+            Math.floor(Math.random() * this.driftColors.length)
+        ]
     }
 }

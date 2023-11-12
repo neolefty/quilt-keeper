@@ -4,7 +4,7 @@ import pinCircle from "../../../../public/pin-circle.svg"
 import pinnedCircle from "../../../../public/pinned-circle.svg"
 import trash from "../../../../public/trash.svg"
 import { DriftColor } from "../DriftColor"
-import { useColorPodge } from "../state/WithColorPodge"
+import { useColorPodge } from "../state/ColorsProvider"
 
 export const PodgeColorCard = ({
     color,
@@ -13,11 +13,13 @@ export const PodgeColorCard = ({
     color: DriftColor
     idx: number
 }) => {
-    const { podge, setPodge } = useColorPodge()
+    const { colors, setColors } = useColorPodge()
     const handleTogglePinned = useCallback(
         () =>
-            setPodge(podge.replaceColor(idx, color.setPinned(!color.isPinned))),
-        [color, idx, podge, setPodge],
+            setColors(
+                colors.replaceColor(idx, color.setPinned(!color.isPinned)),
+            ),
+        [color, idx, colors, setColors],
     )
     return (
         <div
@@ -56,7 +58,7 @@ export const PodgeColorCard = ({
             </div>
             <button
                 className="btn btn-ghost px-1"
-                onClick={() => setPodge(podge.removeColor(idx))}
+                onClick={() => setColors(colors.removeColor(idx))}
             >
                 <Image src={trash} alt="delete" width={28} height={28} />
             </button>
