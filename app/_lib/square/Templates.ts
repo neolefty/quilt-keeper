@@ -15,6 +15,14 @@ const square: Template = {
     paths: [{ group: 0, svgPath: paths.square }],
 }
 
+const dagger: Template = {
+    name: "dagger",
+    paths: [
+        { group: 0, svgPath: paths.square },
+        { group: 1, svgPath: paths.dagger },
+    ],
+}
+
 const heart: Template = {
     name: "heart",
     paths: [
@@ -26,13 +34,11 @@ const heart: Template = {
             group: 1,
             svgPath: paths.heart,
             // correct for viewbox of 0 0 24 24
-            transform: `scale(${
-                (baseLength * 2) / 24
-            }) translate(${baseLength} ${baseLength})`,
+            transform: `scale(${(baseLength * 2) / 24}) translate(-12 -12)`,
         },
     ],
 }
 
-const templates = { diamond, square }
+const templates = { dagger, diamond, square, heart }
 
 export default templates

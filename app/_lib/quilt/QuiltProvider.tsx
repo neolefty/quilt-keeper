@@ -15,7 +15,12 @@ import { ColorPodge } from "../color/ColorPodge"
 interface QuiltState {
     quilt: Square
     setQuilt: (quilt: Square) => void
-    resetQuilt: () => void
+    redistributeColors: () => void
+    resetPattern: () => void
+}
+
+const tni = () => {
+    throw new Error("not implemented")
 }
 
 const defaultQuiltState: QuiltState = {
@@ -27,12 +32,9 @@ const defaultQuiltState: QuiltState = {
             },
         ],
     },
-    setQuilt: () => {
-        throw new Error("not implemented")
-    },
-    resetQuilt: () => {
-        throw new Error("not implemented")
-    },
+    setQuilt: tni,
+    redistributeColors: tni,
+    resetPattern: tni,
 }
 
 const QuiltContext = createContext<QuiltState>(defaultQuiltState)
@@ -52,7 +54,8 @@ export const QuiltProvider = ({
         () => ({
             quilt,
             setQuilt,
-            resetQuilt: () => setQuilt(defaultQuiltState.quilt),
+            redistributeColors: () => setQuilt(defaultQuiltState.quilt),
+            resetPattern: () => setQuilt(defaultQuiltState.quilt),
         }),
         [quilt],
     )
