@@ -1,5 +1,5 @@
 import { useColorPodge } from "../../color/state/ColorsProvider"
-import { useQuilt } from "../WithQuiltState"
+import { useQuilt } from "../QuiltProvider"
 import { ShowSquare } from "./ShowSquare"
 
 export const ShowQuilt = () => {

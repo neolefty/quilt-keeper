@@ -24,7 +24,13 @@ export const ColorControlButtons = () => {
             </button>
             <button
                 className="btn btn-secondary"
-                onClick={() => setColors(colors.addRandomColor())}
+                onClick={() =>
+                    sortColors(
+                        // the more colors there are, the longer it takes to check distance,
+                        // and also the less it matters if the new color is close to the others.
+                        colors.addRandomColor(Math.max(5, 100 / colors.length)),
+                    )
+                }
             >
                 Add
             </button>

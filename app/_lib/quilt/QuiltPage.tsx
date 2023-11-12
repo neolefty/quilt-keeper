@@ -2,7 +2,7 @@
 
 import { ColorsProvider } from "../color/state/ColorsProvider"
 import { ColorControls } from "../color/components/ColorControls"
-import { QuiltProvider, useQuilt } from "./WithQuiltState"
+import { QuiltProvider, useQuilt } from "./QuiltProvider"
 import { ShowQuilt } from "./components/ShowQuilt"
 
 export const QuiltPage = () => {
