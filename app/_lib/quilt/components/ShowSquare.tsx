@@ -1,23 +1,24 @@
 import { isMoreSquares, Square } from "../../square/Square"
 import { Fragment } from "react"
 import { ShowTile } from "./ShowTile"
+import { baseLength } from "../../square/Paths"
 
+/** Render a quilt square as SVG. */
 export const ShowSquare = ({ square: { tiles } }: { square: Square }) => {
     if (isMoreSquares(tiles)) {
-        const scaleX = 1 / tiles.length
         return (
             <>
                 {tiles.map((column, x) => {
-                    const scaleY = 1 / column.length
-                    const translateX = 100 * x * scaleX
+                    const translateX = baseLength + baseLength * 2 * x
                     return (
                         <Fragment key={x}>
                             {column.map((square, y) => {
-                                const translateY = 100 * y * scaleY
+                                const translateY =
+                                    baseLength + baseLength * 2 * y
                                 return (
                                     <g
                                         key={y}
-                                        transform={`translate(${translateX}, ${translateY}) scale(${scaleX}, ${scaleY})`}
+                                        transform={`translate(${translateX}, ${translateY})`}
                                     >
                                         <ShowSquare square={square} />
                                     </g>
@@ -28,7 +29,10 @@ export const ShowSquare = ({ square: { tiles } }: { square: Square }) => {
                 })}
             </>
         )
-    } else
+    } else {
+        // const [width, height] = [tiles.length, tiles[0].length]
+        // const scaleX = 1 / width
+        // const scaleY = 1 / height
         return (
             <>
                 {tiles.map((tile, idx) => (
@@ -36,4 +40,5 @@ export const ShowSquare = ({ square: { tiles } }: { square: Square }) => {
                 ))}
             </>
         )
+    }
 }

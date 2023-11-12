@@ -64,7 +64,7 @@ export const QuiltProvider = ({
 }
 
 const numberRange = (start: number, end: number) => {
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+    return Array.from({ length: end - start }, (_, i) => start)
 }
 
 function randomValue<T>(items: Record<string, T>): T {

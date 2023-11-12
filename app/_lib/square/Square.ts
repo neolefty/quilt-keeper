@@ -31,6 +31,6 @@ export interface Template {
 
 export interface TemplatePath {
     group: number // corresponds to a color & layer
-    svgPath: string // assume a viewbox of -100 to 100 in x & y
+    svgPath: string // assume a viewbox of -baseLength to baseLength in x & y
     transform?: string // svg transform attribute
 }

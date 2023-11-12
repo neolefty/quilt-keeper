@@ -1,4 +1,4 @@
-import paths from "./Paths"
+import paths, { baseLength } from "./Paths"
 
 import { Template } from "./Square"
 
@@ -26,7 +26,9 @@ const heart: Template = {
             group: 1,
             svgPath: paths.heart,
             // correct for viewbox of 0 0 24 24
-            transform: `scale(${200 / 24}) translate(100 100)`,
+            transform: `scale(${
+                (baseLength * 2) / 24
+            }) translate(${baseLength} ${baseLength})`,
         },
     ],
 }
