@@ -15,7 +15,7 @@ export const QuiltPage = () => {
                         <hr />
                         <QuiltControls />
                     </div>
-                    <div className="bg-base-100 h-full w-full">
+                    <div className="bg-base-100 w-full h-full">
                         <ShowQuilt />
                     </div>
                 </div>

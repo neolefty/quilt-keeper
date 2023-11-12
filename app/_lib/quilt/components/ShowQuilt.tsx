@@ -14,6 +14,7 @@ export const ShowQuilt = () => {
     console.log({ width, height, tiles })
     return (
         <svg
+            className="max-h-full max-w-full quiltArea"
             viewBox={`0 0 ${baseLength * width * 2} ${baseLength * height * 2}`}
         >
             <ShowSquare square={quilt} />
