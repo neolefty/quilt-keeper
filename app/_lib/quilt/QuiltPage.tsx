@@ -25,13 +25,13 @@ export const QuiltPage = () => {
 }
 
 export const QuiltControls = () => {
-    const { quilt, setQuilt, redistributeColors } = useQuilt()
+    const { quilt, setQuilt, redistributeColors, resetPattern } = useQuilt()
     return (
         <div className="grid grid-cols-1 gap-3">
             <button className="btn btn-primary" onClick={redistributeColors}>
                 Redistribute Colors
             </button>
-            <button className="btn btn-primary" onClick={redistributeColors}>
+            <button className="btn btn-primary" onClick={resetPattern}>
                 Random Pattern
             </button>
         </div>

@@ -35,6 +35,8 @@ export const ShowGridOfSquares = ({
     square: GridOfSquares
     setSquare: (square: Square) => void
 }) => {
+    // Function to build setSquare functions for each sub-quilt that
+    // recursively (anti-recursively?) call setSquare provided by the parent.
     const makeSetSquare = useCallback(
         (x: number, y: number) => (square: Square) => {
             return (square: Square) => {

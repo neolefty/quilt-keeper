@@ -1,17 +1,19 @@
 import { TemplatePath, Tile } from "../../square/Square"
 import { useColorPodge } from "../../color/state/ColorsProvider"
+import { useHover } from "@mantine/hooks"
 
 const ShowPath = ({ tile, path }: { tile: Tile; path: TemplatePath }) => {
     const { colors } = useColorPodge()
     const { group, svgPath, transform } = path
     const { groupColorMap, template, rotation } = tile
     const colorId = groupColorMap[group]
-    const color = colors.driftColors.find((c) => c.key === colorId)
+    const color = colors.byKey.get(colorId)
     return <path d={svgPath} fill={color?.hexString} transform={transform} />
 }
 
 export const ShowTile = ({ tile }: { tile: Tile }) => {
     const { rotation, mirror, template } = tile
+    const hover = useHover()
     return (
         // viewbox is supplied by parent; it's always -baseLength to +baseLength in x and y
         <g

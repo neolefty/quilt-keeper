@@ -42,3 +42,19 @@ export interface TemplatePath {
     svgPath: string // assume a viewbox of -baseLength to baseLength in x & y
     transform?: string // svg transform attribute
 }
+
+export const mapQuiltTiles = (
+    quilt: Square,
+    callback: (tile: Tile) => Tile,
+): Square => {
+    if (isGrid(quilt)) {
+        return {
+            tiles: quilt.tiles.map((row) =>
+                row.map((column) => mapQuiltTiles(column, callback)),
+            ) as GridOfSquares["tiles"], // annotate that arrays are non-empty
+        }
+    } else
+        return {
+            tiles: quilt.tiles.map(callback) as SingleSquare["tiles"], // annotate that array is non-empty
+        }
+}

@@ -41,6 +41,7 @@ export class ColorPodge {
         readonly settled: boolean = false, // has dispersion settled down?
         // history of the last few closestTwo score
         readonly dispersionHistory: ReadonlyArray<number> = [],
+        readonly byKey = new Map(driftColors.map((dc) => [dc.key, dc])),
     ) {}
 
     get length() {

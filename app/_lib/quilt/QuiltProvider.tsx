@@ -1,6 +1,7 @@
 import {
     GridOfSquares,
     isGrid,
+    mapQuiltTiles,
     Square,
     TemplatePath,
     Tile,
@@ -89,6 +90,11 @@ export const QuiltProvider = ({
         }),
         [colors, quilt],
     )
+    useEffect(() => {
+        if (colors.length === 0 || quilt === defaultQuiltState.quilt) return
+        const square = fillInMissingColors(quilt, colors)
+        if (square !== quilt) setQuilt(square)
+    }, [colors, quilt])
     return (
         <QuiltContext.Provider value={quiltState}>
             {children}
@@ -103,6 +109,33 @@ const numberRange = (start: number, end: number) => {
 function randomValue<T>(items: Record<string, T>): T {
     const keys = Object.keys(items)
     return items[keys[Math.floor(keys.length * Math.random())]]
+}
+
+/**
+ * Sometimes colors are removed; when that happens, fill in with random colors.
+ * If no change, return the original square.
+ */
+const fillInMissingColors = (square: Square, colors: ColorPodge): Square => {
+    let changed = false
+    const result = mapQuiltTiles(square, (tile) => {
+        const missing = Object.values(tile.groupColorMap).some(
+            (key) => colors.byKey.get(key) === undefined,
+        )
+        if (missing) {
+            changed = true
+            return {
+                ...tile,
+                groupColorMap: Object.fromEntries(
+                    Object.entries(tile.groupColorMap).map(([group, key]) => [
+                        group,
+                        colors.byKey.get(key) ? key : colors.pickRandom().key,
+                    ]),
+                ),
+            }
+        } else return tile
+    })
+    if (changed) return result
+    else return square
 }
 
 const createRandomQuilt = (
