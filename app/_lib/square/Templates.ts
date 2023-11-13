@@ -39,6 +39,14 @@ const heart: Template = {
     ],
 }
 
-const templates = { dagger, diamond, square, heart }
+const diagonal: Template = {
+    name: "diagonal",
+    paths: [
+        { group: 0, svgPath: paths.square },
+        { group: 1, svgPath: paths.diagonal },
+    ],
+}
+
+const templates = { dagger, diagonal, diamond, square, heart }
 
 export default templates

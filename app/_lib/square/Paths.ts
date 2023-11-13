@@ -21,5 +21,7 @@ const daggerIntercept = B * 2 * sin225 - B
 // diagonal isosceles triangle
 const dagger = `M-${B} -${B}L${daggerIntercept} ${B}L${B} ${daggerIntercept}z`
 
-const paths = { heart, diamond, square, dagger }
+const diagonal = `M${B} ${B}L-${B} -${B}L-${B} ${B}z`
+
+const paths = { dagger, diagonal, /*diamond, */ heart, square }
 export default paths
