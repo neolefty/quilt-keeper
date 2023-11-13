@@ -114,6 +114,7 @@ function randomValue<T>(items: Record<string, T>): T {
 /**
  * Sometimes colors are removed; when that happens, fill in with random colors.
  * If no change, return the original square.
+ * TODO prefer colors that aren't already in the tile.
  */
 const fillInMissingColors = (square: Square, colors: ColorPodge): Square => {
     let changed = false
