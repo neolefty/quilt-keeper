@@ -11,13 +11,16 @@ const ShowPath = ({ tile, path }: { tile: Tile; path: TemplatePath }) => {
 }
 
 export const ShowTile = ({ tile }: { tile: Tile }) => {
-    const { rotation, template } = tile
+    const { rotation, mirror, template } = tile
     return (
         // viewbox is supplied by parent; it's always -baseLength to +baseLength in x and y
         <g
-            transform={
-                rotation === undefined ? undefined : `rotate(${rotation})`
-            }
+            transform={[
+                rotation === undefined ? undefined : `rotate(${rotation})`,
+                mirror ? "scale(-1, 1)" : undefined,
+            ]
+                .filter(Boolean)
+                .join(" ")}
         >
             {template.paths.map((path, idx) => (
                 <ShowPath key={idx} tile={tile} path={path} />

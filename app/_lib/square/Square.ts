@@ -26,6 +26,7 @@ export interface Tile {
     groupColorMap: Record<number, number>
     template: Template
     rotation?: number // 0, 90, 180, 270
+    mirror?: boolean
     // scale?: number
     // tiles: Template[][] // grid of templates
     // tiles: Square[][]? // recursively map the colors?
