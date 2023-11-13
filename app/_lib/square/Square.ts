@@ -1,18 +1,25 @@
 import { OneByOneOrMore, OneOrMore } from "../FixedLengthArrays"
 
+/** A quilt square that is a single pile of tiles. */
+export interface SingleSquare {
+    tiles: OneOrMore<Tile>
+}
+
+/** A quilt square that is recursively a grid of squares. */
+export interface GridOfSquares {
+    tiles: OneByOneOrMore<Square>
+}
+
 /**
  *  A quilt square that can be rendered.
  *  Either a pile of tiles, or a recursive grid of squares, laid out like this: tiles[x][y].
  *  Note that an interface is required here because of the recursive definition.
  */
-export interface Square {
-    tiles: OneOrMore<Tile> | OneByOneOrMore<Square>
-}
+export type Square = SingleSquare | GridOfSquares
 
 /** Is it squares all the way down? */
-export const isMoreSquares = (
-    tiles: OneOrMore<Tile> | OneByOneOrMore<Square>,
-): tiles is OneByOneOrMore<Square> => Array.isArray(tiles[0])
+export const isGrid = (square: Square): square is GridOfSquares =>
+    Array.isArray(square.tiles[0])
 
 export interface Tile {
     // map of group to DriftColor ID

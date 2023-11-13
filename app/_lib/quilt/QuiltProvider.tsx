@@ -1,4 +1,10 @@
-import { isMoreSquares, Square, TemplatePath, Tile } from "../square/Square"
+import {
+    GridOfSquares,
+    isGrid,
+    Square,
+    TemplatePath,
+    Tile,
+} from "../square/Square"
 import {
     createContext,
     PropsWithChildren,
@@ -40,20 +46,20 @@ const defaultQuiltState: QuiltState = {
 const QuiltContext = createContext<QuiltState>(defaultQuiltState)
 
 /** Assign random colors to all tiles in a quilt. */
-const redistributeColors = ({ tiles }: Square, colors: ColorPodge): Square => {
-    if (isMoreSquares(tiles)) {
+const redistributeColors = (square: Square, colors: ColorPodge): Square => {
+    if (isGrid(square)) {
         return {
-            tiles: tiles.map((column) =>
+            tiles: square.tiles.map((column) =>
                 column.map((square) => redistributeColors(square, colors)),
-            ) as Square["tiles"], // cast to reassure about non-empty arrays
-        }
+            ),
+        } as GridOfSquares // cast to reassure about non-empty arrays
     } else {
         return {
             tiles: [
                 {
-                    ...tiles[0],
+                    ...square.tiles[0],
                     groupColorMap: assignRandomColors(
-                        tiles[0].template.paths,
+                        square.tiles[0].template.paths,
                         colors,
                     ),
                 },
@@ -91,7 +97,7 @@ export const QuiltProvider = ({
 }
 
 const numberRange = (start: number, end: number) => {
-    return Array.from({ length: end - start }, (_, i) => start)
+    return Array.from({ length: end - start }, (_, i) => i + start)
 }
 
 function randomValue<T>(items: Record<string, T>): T {
@@ -110,10 +116,9 @@ const createRandomQuilt = (
         )
     // TypeScript doesn't quite figure out that the arrays are guaranteed to be non-zero-length,
     // but we can at least rely on it to ensure it's an array of arrays of Squares.
-    const tiles: Square[][] = numberRange(0, width).map((x) =>
-        numberRange(0, height).map((y) => {
+    const tiles: Square[][] = numberRange(0, width).map(() =>
+        numberRange(0, height).map(() => {
             const template = randomValue(templates)
-            let groupColorMap: Tile["groupColorMap"] = {}
             const tile: Tile = {
                 groupColorMap: assignRandomColors(template.paths, podge),
                 rotation: Math.floor(Math.random() * 4) * 90,
@@ -124,16 +129,15 @@ const createRandomQuilt = (
             }
         }),
     )
-    return {
-        tiles: tiles as Square["tiles"],
-    }
+    // annotate as non-zero length
+    return { tiles } as GridOfSquares
 }
 
 function shuffle<T>(items: T[]): T[] {
     const result = [...items]
     result.forEach((_, i) => {
         const temp = result[i]
-        const j = Math.floor(Math.random() * i)
+        const j = Math.floor(Math.random() * result.length)
         result[i] = result[j]
         result[j] = temp
     })
