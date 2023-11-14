@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/hooks": "^7.2.1",
     "hsluv": "^1.0.1",
     "next": "14.0.1",
     "react": "^18",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18"
   },
   "devDependencies": {

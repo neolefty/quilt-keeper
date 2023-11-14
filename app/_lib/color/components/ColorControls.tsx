@@ -1,9 +1,9 @@
 import { ColorControlButtons } from "./ColorControlButtons"
 import { PodgeColorCard } from "./PodgeColorCard"
-import { useColorPodge } from "../state/ColorsProvider"
+import { useColors } from "../state/ColorsProvider"
 
 export const ColorControls = () => {
-    const { colors, setColors, sortColors } = useColorPodge()
+    const { colors, setColors, sortColors } = useColors()
     return (
         <div className="grid gap-3">
             <ColorControlButtons />

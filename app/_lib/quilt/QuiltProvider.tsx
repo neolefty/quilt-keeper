@@ -2,6 +2,7 @@ import {
     GridOfSquares,
     isGrid,
     mapQuiltTiles,
+    SingleSquare,
     Square,
     TemplatePath,
     Tile,
@@ -15,7 +16,7 @@ import {
     useState,
 } from "react"
 import templates from "../square/Templates"
-import { useColorPodge } from "../color/state/ColorsProvider"
+import { useColors } from "../color/state/ColorsProvider"
 import { Pair } from "../FixedLengthArrays"
 import { ColorPodge } from "../color/ColorPodge"
 
@@ -73,7 +74,7 @@ export const QuiltProvider = ({
     defaultQuiltSize = [3, 5],
     children,
 }: PropsWithChildren<{ defaultQuiltSize?: Pair<number> }>) => {
-    const { colors } = useColorPodge()
+    const { colors } = useColors()
     const [quilt, setQuilt] = useState(defaultQuiltState.quilt)
     const [width, height] = defaultQuiltSize
     useEffect(() => {
@@ -142,7 +143,7 @@ const fillInMissingColors = (square: Square, colors: ColorPodge): Square => {
 const createRandomQuilt = (
     width: number,
     height: number,
-    podge: ColorPodge,
+    colors: ColorPodge,
 ): Square => {
     if (width < 1 || height < 1)
         throw new Error(
@@ -151,20 +152,22 @@ const createRandomQuilt = (
     // TypeScript doesn't quite figure out that the arrays are guaranteed to be non-zero-length,
     // but we can at least rely on it to ensure it's an array of arrays of Squares.
     const tiles: Square[][] = numberRange(0, width).map(() =>
-        numberRange(0, height).map(() => {
-            const template = randomValue(templates)
-            const tile: Tile = {
-                groupColorMap: assignRandomColors(template.paths, podge),
-                rotation: Math.floor(Math.random() * 4) * 90,
-                template,
-            }
-            return {
-                tiles: [tile],
-            }
-        }),
+        numberRange(0, height).map(() => createRandomSquare(colors)),
     )
     // annotate as non-zero length
     return { tiles } as GridOfSquares
+}
+
+export const createRandomSquare = (podge: ColorPodge): SingleSquare => {
+    const template = randomValue(templates)
+    const tile: Tile = {
+        groupColorMap: assignRandomColors(template.paths, podge),
+        rotation: Math.floor(Math.random() * 4) * 90,
+        template,
+    }
+    return {
+        tiles: [tile],
+    }
 }
 
 function shuffle<T>(items: T[]): T[] {

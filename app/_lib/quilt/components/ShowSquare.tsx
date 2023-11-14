@@ -1,7 +1,7 @@
 import { GridOfSquares, isGrid, Square } from "../../square/Square"
 import { Fragment, useCallback } from "react"
-import { ShowTile } from "./ShowTile"
 import { baseLength } from "../../square/Paths"
+import { ShowSingleSquare } from "./ShowSingleSquare"
 
 /** Render a quilt square as SVG. */
 export const ShowSquare = ({
@@ -15,16 +15,7 @@ export const ShowSquare = ({
     if (isGrid(square)) {
         return <ShowGridOfSquares square={square} setSquare={setSquare} />
     } else {
-        // const [width, height] = [tiles.length, tiles[0].length]
-        // const scaleX = 1 / width
-        // const scaleY = 1 / height
-        return (
-            <>
-                {square.tiles.map((tile, idx) => (
-                    <ShowTile tile={tile} key={idx} />
-                ))}
-            </>
-        )
+        return <ShowSingleSquare square={square} setSquare={setSquare} />
     }
 }
 
@@ -39,12 +30,12 @@ export const ShowGridOfSquares = ({
     // recursively (anti-recursively?) call setSquare provided by the parent.
     const makeSetSquare = useCallback(
         (x: number, y: number) => (square: Square) => {
-            return (square: Square) => {
-                // make a copy
-                const newTiles = [...tiles.map((column) => [...column])]
-                newTiles[x][y] = square
-                setSquare({ tiles: newTiles } as GridOfSquares) // annotate that arrays are not empty
-            }
+            // make a copy ...
+            const newTiles = [...tiles.map((column) => [...column])]
+            // ... and edit it ...
+            newTiles[x][y] = square
+            // ... and pass it up to the parent
+            setSquare({ tiles: newTiles } as GridOfSquares) // annotate that arrays are not empty
         },
         [setSquare, tiles],
     )

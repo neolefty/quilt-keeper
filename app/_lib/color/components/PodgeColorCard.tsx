@@ -4,7 +4,7 @@ import pinCircle from "../../../../public/pin-circle.svg"
 import pinnedCircle from "../../../../public/pinned-circle.svg"
 import trash from "../../../../public/trash.svg"
 import { DriftColor } from "../DriftColor"
-import { useColorPodge } from "../state/ColorsProvider"
+import { useColors } from "../state/ColorsProvider"
 
 export const PodgeColorCard = ({
     color,
@@ -13,7 +13,7 @@ export const PodgeColorCard = ({
     color: DriftColor
     idx: number
 }) => {
-    const { colors, setColors } = useColorPodge()
+    const { colors, setColors } = useColors()
     const handleTogglePinned = useCallback(
         () =>
             setColors(

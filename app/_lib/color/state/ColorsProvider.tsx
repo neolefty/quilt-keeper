@@ -58,4 +58,4 @@ export const ColorsProvider = ({
     )
 }
 
-export const useColorPodge = () => useContext(ColorsContext)
+export const useColors = () => useContext(ColorsContext)
