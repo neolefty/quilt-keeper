@@ -2,7 +2,7 @@ import { SingleSquare, Square } from "../../square/Square"
 import { ShowTile } from "./ShowTile"
 import { useHover } from "@mantine/hooks"
 import { baseLength as B } from "../../square/Paths"
-import { TrashG } from "../../icons/Trash"
+import { IconG } from "../../icons/Trash"
 import { useColors } from "../../color/state/ColorsProvider"
 import { createRandomSquare } from "../QuiltProvider"
 
@@ -59,7 +59,7 @@ export const ShowSingleSquare = ({
                                 setSquare(square)
                             }}
                         />
-                        <TrashG className="pointer-events-none" />
+                        <IconG className="pointer-events-none" icon="trash" />
                     </g>
                 </g>
             )}
