@@ -1,4 +1,4 @@
-import { IconPaths, TrashPath } from "./IconPaths"
+import { IconPaths } from "./IconPaths"
 
 export const IconSvg = ({ icon }: { icon: keyof typeof IconPaths }) => {
     const Icon = IconPaths[icon]
