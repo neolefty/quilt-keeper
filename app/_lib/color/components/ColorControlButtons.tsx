@@ -1,7 +1,7 @@
 import { useColors } from "../state/ColorsProvider"
 
 export const ColorControlButtons = () => {
-    const { setColors, colors, sortColors } = useColors()
+    const { colors, sortColors } = useColors()
     return (
         <div className="grid grid-cols-2 gap-3">
             <button

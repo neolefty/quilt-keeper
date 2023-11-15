@@ -9,6 +9,7 @@ import {
     Tile,
 } from "../square/Square"
 import templates from "../square/Templates"
+import { OneOrMore } from "../FixedLengthArrays"
 
 /** Assign random colors to all tiles in a quilt. */
 export const redistributeColors = (
@@ -35,8 +36,9 @@ export const redistributeColors = (
         }
     }
 }
-export const numberRange = (start: number, end: number) => {
-    return Array.from({ length: end - start }, (_, i) => i + start)
+export const numberRange = (start: number, end?: number) => {
+    const [realStart, realEnd] = end === undefined ? [0, start] : [start, end]
+    return Array.from({ length: realEnd - realStart }, (_, i) => i + realStart)
 }
 
 function randomValue<T>(items: Record<string, T>): T {
@@ -78,15 +80,15 @@ export const createRandomQuilt = (
     width: number,
     height: number,
     colors: ColorPodge,
-): Square => {
+): GridOfSquares => {
     if (width < 1 || height < 1)
         throw new Error(
             `Quilt must be at least 1x1 — received ${width}x${height}}`,
         )
     // TypeScript doesn't quite figure out that the arrays are guaranteed to be non-zero-length,
     // but we can at least rely on it to ensure it's an array of arrays of Squares.
-    const tiles: Square[][] = numberRange(0, width).map(() =>
-        numberRange(0, height).map(() => createRandomSquare(colors)),
+    const tiles: Square[][] = numberRange(width).map(() =>
+        numberRange(height).map(() => createRandomSquare(colors)),
     )
     // annotate as non-zero length
     return { tiles } as GridOfSquares
@@ -136,18 +138,45 @@ export const addStripe = (
     side: Side,
     colors: ColorPodge,
 ): GridOfSquares => {
+    // start with a copy
+    const tiles = [
+        ...quilt.tiles.map((column) => [...column]),
+    ] as GridOfSquares["tiles"]
+
+    // create a stripe of random squares
     const width = quilt.tiles.length
     const height = quilt.tiles[0].length
     const newStripe = numberRange(
         0,
         side === "top" || side === "bottom" ? width : height,
-    ).map(() => createRandomSquare(colors))
-    const tiles = [
-        ...(side === "left" ? [newStripe] : []),
-        ...quilt.tiles,
-        ...(side === "right" ? [newStripe] : []),
-    ]
+    ).map(() => createRandomSquare(colors)) as OneOrMore<Square>
+
+    // add it to the right part of the quilt
+    if (side === "left") tiles.unshift(newStripe)
+    if (side === "right") tiles.push(newStripe)
     if (side === "top") tiles.forEach((row, idx) => row.unshift(newStripe[idx]))
     if (side === "bottom") tiles.forEach((row, idx) => row.push(newStripe[idx]))
+
     return { tiles } as GridOfSquares
 }
+
+export const removeStripe = (
+    quilt: GridOfSquares,
+    side: Side,
+): GridOfSquares => {
+    // start with a copy
+    const tiles = [
+        ...quilt.tiles.map((column) => [...column]),
+    ] as GridOfSquares["tiles"]
+
+    // remove the stripe
+    if (side === "left") tiles.shift()
+    if (side === "right") tiles.pop()
+    if (side === "top") tiles.forEach((row) => row.shift())
+    if (side === "bottom") tiles.forEach((row) => row.pop())
+
+    return { tiles } as GridOfSquares
+}
+
+export const quiltDimensions = (quilt: Square) =>
+    isGrid(quilt) ? [quilt.tiles.length, quilt.tiles[0].length] : [1, 1]
