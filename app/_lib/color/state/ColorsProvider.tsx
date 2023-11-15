@@ -49,7 +49,7 @@ export const ColorsProvider = ({
             sortColors,
             colors: colors,
         }),
-        [colors],
+        [colors, sortColors],
     )
     return (
         <ColorsContext.Provider value={state}>

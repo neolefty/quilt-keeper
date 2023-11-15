@@ -58,9 +58,9 @@ const useSquareActions = ({
                     })),
                 } as SingleSquare),
             d6: () => setSquare(createRandomSquare(colors)),
+            trash: undefined,
             paintBrush: () => setSquare(redistributeColors(square, colors)),
-            // trash: undefined,
-            // reroute: undefined,
+            reroute: undefined,
         }),
         [colors, setSquare, square],
     )

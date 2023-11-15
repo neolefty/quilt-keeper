@@ -11,8 +11,8 @@ export interface GridOfSquares {
 }
 
 /**
- *  A quilt square that can be rendered.
- *  Either a pile of tiles, or a recursive grid of squares, laid out like this: tiles[x][y].
+ *  A quilt square.
+ *  Polymorphic: Either a pile of tiles, or a recursive grid of squares, laid out like this: tiles[x][y].
  *  Note that an interface is required here because of the recursive definition.
  */
 export type Square = SingleSquare | GridOfSquares

@@ -35,7 +35,7 @@ export const redistributeColors = (
         }
     }
 }
-const numberRange = (start: number, end: number) => {
+export const numberRange = (start: number, end: number) => {
     return Array.from({ length: end - start }, (_, i) => i + start)
 }
 
@@ -127,4 +127,27 @@ const assignRandomColors = (
             return [group, remainingColors.pop()!]
         }),
     )
+}
+
+export type Side = "top" | "right" | "bottom" | "left"
+
+export const addStripe = (
+    quilt: GridOfSquares,
+    side: Side,
+    colors: ColorPodge,
+): GridOfSquares => {
+    const width = quilt.tiles.length
+    const height = quilt.tiles[0].length
+    const newStripe = numberRange(
+        0,
+        side === "top" || side === "bottom" ? width : height,
+    ).map(() => createRandomSquare(colors))
+    const tiles = [
+        ...(side === "left" ? [newStripe] : []),
+        ...quilt.tiles,
+        ...(side === "right" ? [newStripe] : []),
+    ]
+    if (side === "top") tiles.forEach((row, idx) => row.unshift(newStripe[idx]))
+    if (side === "bottom") tiles.forEach((row, idx) => row.push(newStripe[idx]))
+    return { tiles } as GridOfSquares
 }

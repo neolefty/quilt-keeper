@@ -32,7 +32,7 @@ export const QuiltControls = () => {
                 Redistribute Colors
             </button>
             <button className="btn btn-primary" onClick={resetPattern}>
-                Random Pattern
+                New Quilt
             </button>
         </div>
     )

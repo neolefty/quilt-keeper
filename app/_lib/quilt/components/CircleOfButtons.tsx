@@ -1,5 +1,4 @@
 import { IconPaths } from "../../icons/IconPaths"
-import { baseLength as B } from "../../square/Paths"
 import { IconG } from "../../icons/IconSvg"
 import clsx from "clsx"
 
@@ -60,13 +59,12 @@ export const CircleOfButtons = ({
     const ringRadius = outerRadius / (1 + Math.sin(Math.PI / n))
     // And then work backwards to get buttonRadius:
     const buttonRadius = outerRadius - ringRadius
-    console.log({ n, ringRadius, buttonRadius })
     return Object.entries(icons).map((entry, idx) => {
         const [icon, onClick] = entry as IconEntry
         const angle = (idx * 2 * Math.PI) / n
         const x = Math.cos(angle) * ringRadius
         const y = Math.sin(angle) * ringRadius
-        // Note on layout and hover: Circle needs to not be a sibling of the rect so that
+        // Note on layout and hover: Circle needs to not be a sibling of the hover rect so that
         // hovering the circle will de-hover the rect, to make the effect of clicking unobscured.
         return (
             <g transform={`translate(${x} ${y})`} key={icon}>
