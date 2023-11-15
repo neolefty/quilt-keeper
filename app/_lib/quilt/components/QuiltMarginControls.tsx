@@ -80,6 +80,7 @@ export function QuiltMarginControls({
                     width={controlMargin}
                 />
             </g>
+            <Corners m={controlMargin} h={height} w={width} />
         </>
     )
 }
@@ -139,4 +140,24 @@ const QuiltMarginBar = ({
             )}
         </>
     )
+}
+
+// Fill in the corners for visual consistency in dark mode
+const Corners = ({ m, h, w }: { m: number; h: number; w: number }) => {
+    const translations = [
+        `-${m} -${m}`,
+        `${w} -${m}`,
+        `-${m} ${h}`,
+        `${w} ${h}`,
+    ]
+    return translations.map((t, idx) => (
+        <rect
+            key={idx}
+            transform={`translate(${t})`}
+            width={m}
+            height={m}
+            opacity={0.12}
+            fill="#fff"
+        />
+    ))
 }
