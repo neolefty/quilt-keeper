@@ -1,5 +1,5 @@
 import { SingleSquare, Square } from "../../square/Square"
-import { baseLength as B } from "../../square/Paths"
+import { baseLength, baseLength as B } from "../../square/Paths"
 import { CircleOfButtons } from "./CircleOfButtons"
 import { IconPaths } from "../../icons/IconPaths"
 import { useColors } from "../../color/state/ColorsProvider"
@@ -26,7 +26,7 @@ export const SquareActions = ({
                 width={B * 2}
                 height={B * 2}
             />
-            <CircleOfButtons icons={icons} />
+            <CircleOfButtons icons={icons} outerRadius={baseLength * 0.9} />
         </g>
     )
 }
@@ -59,7 +59,9 @@ const useSquareActions = ({
                 } as SingleSquare),
             d6: () => setSquare(createRandomSquare(colors)),
             paintBrush: () => setSquare(redistributeColors(square, colors)),
+            // trash: undefined,
+            // reroute: undefined,
         }),
-        [colors, setSquare, square.tiles],
+        [colors, setSquare, square],
     )
 }
