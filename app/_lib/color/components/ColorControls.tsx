@@ -1,5 +1,5 @@
 import { ColorControlButtons } from "./ColorControlButtons"
-import { PodgeColorCard } from "./PodgeColorCard"
+import { ColorCard } from "./ColorCard"
 import { useColors } from "../state/ColorsProvider"
 
 export const ColorControls = () => {
@@ -9,7 +9,7 @@ export const ColorControls = () => {
             <ColorControlButtons />
             <hr />
             {colors.driftColors.map((color, idx) => (
-                <PodgeColorCard color={color} idx={idx} key={idx} />
+                <ColorCard color={color} idx={idx} key={idx} />
             ))}
         </div>
     )

@@ -48,32 +48,35 @@ export class ColorPodge {
         return this.driftColors.length
     }
 
-    /**
-     * Add a random color to this podge.
-     * @param distanceTrials add the Nth random color that is furthest from existing colors.
-     */
-    addRandomColor(distanceTrials = 1): ColorPodge {
+    lookForDistantColor(distanceTrials = 1): DriftColor {
         if (distanceTrials < 1)
             throw new Error(`distanceTrials < 1 (${distanceTrials}})}`)
         const actualTrials = this.length === 0 ? 1 : distanceTrials
-        let colorToAdd = DriftColor.BLACK
+        let distantColor = DriftColor.BLACK
         let maxMinDist = -Infinity
         for (let i = 0; i < actualTrials; i++) {
             const color = DriftColor.random()
             const dist = this.minDist(color, undefined, true)
             if (dist > maxMinDist) {
-                colorToAdd = color
+                distantColor = color
                 maxMinDist = dist
             }
         }
-        if (colorToAdd !== DriftColor.BLACK) {
-            return new ColorPodge(
-                [...this.driftColors, colorToAdd],
-                this.neverSettle,
-                // reset settlement tracking because a new color is in the mix
-            )
-        }
-        throw new Error("failed to add random color")
+        if (distantColor === DriftColor.BLACK)
+            throw new Error("failed to find distant color")
+        return distantColor
+    }
+
+    /**
+     * Add a random color to this podge.
+     * @param distanceTrials add the Nth random color that is furthest from existing colors.
+     */
+    addRandomColor(distanceTrials = 1): ColorPodge {
+        return new ColorPodge(
+            [...this.driftColors, this.lookForDistantColor(distanceTrials)],
+            this.neverSettle,
+            // reset settlement tracking because a new color is in the mix
+        )
     }
 
     removeColor(idx: number): ColorPodge {
