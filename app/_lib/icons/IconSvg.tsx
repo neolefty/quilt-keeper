@@ -1,34 +1,33 @@
 import { IconPaths } from "./IconPaths"
 
-export const IconSvg = ({ icon }: { icon: keyof typeof IconPaths }) => {
+export const IconSvg = ({
+    icon,
+    color = "#fff",
+}: {
+    icon: keyof typeof IconPaths
+    color?: string
+}) => {
     const Icon = IconPaths[icon]
     return (
-        <svg viewBox="0 0 24 24" fill="none">
-            <Icon />
+        <svg viewBox="0 0 24 24">
+            <Icon color={color} />
         </svg>
     )
 }
 
 export const IconG = ({
     icon,
-    stroke = "#ffffff",
-    fill = "none",
+    color = "#fff",
     className,
 }: {
     icon: keyof typeof IconPaths
-    stroke?: string
-    fill?: string
+    color?: string
     className?: string
 }) => {
     const Icon = IconPaths[icon]
     return (
-        <g
-            viewBox="0 0 24 24"
-            fill={fill}
-            stroke={stroke}
-            className={className}
-        >
-            <Icon />
+        <g viewBox="0 0 24 24" className={className}>
+            <Icon color={color} />
         </g>
     )
 }

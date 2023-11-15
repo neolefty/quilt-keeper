@@ -4,7 +4,8 @@ import { CircleOfButtons } from "./CircleOfButtons"
 import { IconPaths } from "../../icons/IconPaths"
 import { useColors } from "../../color/state/ColorsProvider"
 import { useMemo } from "react"
-import { createRandomSquare } from "../QuiltProvider"
+
+import { createRandomSquare, redistributeColors } from "../quiltFunctions"
 
 export const SquareActions = ({
     square,
@@ -35,7 +36,7 @@ const useSquareActions = ({
 }: {
     square: SingleSquare
     setSquare: (square: Square) => void
-}): Record<keyof typeof IconPaths, () => void> => {
+}): Partial<Record<keyof typeof IconPaths, () => void>> => {
     const { colors } = useColors()
     return useMemo(
         () => ({
@@ -53,7 +54,8 @@ const useSquareActions = ({
                         rotation: ((tile.rotation ?? 0) + 90) % 360,
                     })),
                 } as SingleSquare),
-            trash: () => setSquare(createRandomSquare(colors)),
+            d6: () => setSquare(createRandomSquare(colors)),
+            paintBrush: () => setSquare(redistributeColors(square, colors)),
         }),
         [colors, setSquare, square.tiles],
     )

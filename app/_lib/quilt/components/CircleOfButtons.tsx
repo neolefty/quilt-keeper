@@ -7,7 +7,7 @@ type IconEntry = [keyof typeof IconPaths, () => void]
 export const CircleOfButtons = ({
     icons,
 }: {
-    icons: Record<keyof typeof IconPaths, () => void>
+    icons: Partial<Record<keyof typeof IconPaths, () => void>>
 }) => {
     const n = Object.keys(icons).length
     // the radius of the circle of buttons
