@@ -11,9 +11,9 @@ export const CircleOfButtons = ({
 }) => {
     const n = Object.keys(icons).length
     // the radius of the circle of buttons
-    const ringRadius = B * 0.5
-    const buttonRadius = (B * 0.4 * Math.PI) / n
-    const iconScale = (0.8 * buttonRadius) / 12
+    const ringRadius = B * 0.55
+    const buttonRadius = (B * 0.5 * Math.PI) / n
+    const iconScale = (0.75 * buttonRadius) / 12
     return Object.entries(icons).map((entry, idx) => {
         const [icon, onClick] = entry as IconEntry
         const angle = (idx * 2 * Math.PI) / n
