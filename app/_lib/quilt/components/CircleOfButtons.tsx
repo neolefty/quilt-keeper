@@ -2,17 +2,22 @@ import { IconPaths } from "../../icons/IconPaths"
 import { baseLength as B } from "../../square/Paths"
 import { Fragment } from "react"
 import { IconG } from "../../icons/IconSvg"
+import clsx from "clsx"
 
-type IconEntry = [keyof typeof IconPaths, () => void]
+type IconEntry = [keyof typeof IconPaths, (() => void) | undefined]
 export const CircleOfButtons = ({
+    /**
+     *  A map of icon names to click handlers.
+     *  Icons with undefined click handlers will be rendered as disabled buttons.
+     */
     icons,
 }: {
-    icons: Partial<Record<keyof typeof IconPaths, () => void>>
+    icons: Partial<Record<keyof typeof IconPaths, (() => void) | undefined>>
 }) => {
     const n = Object.keys(icons).length
     // the radius of the circle of buttons
     const ringRadius = B * 0.55
-    const buttonRadius = (B * 0.5 * Math.PI) / n
+    const buttonRadius = (ringRadius * Math.PI) / n
     const iconScale = (0.75 * buttonRadius) / 12
     return Object.entries(icons).map((entry, idx) => {
         const [icon, onClick] = entry as IconEntry
@@ -28,16 +33,22 @@ export const CircleOfButtons = ({
                 <g transform={circleTransform}>
                     <circle
                         r={buttonRadius}
-                        fill="#000000"
+                        fill={onClick ? "#000000" : undefined}
                         opacity={0}
-                        className="cursor-pointer hover:opacity-20 active:opacity-60 transition-opacity duration-200"
+                        className={clsx(
+                            "cursor-pointer transition-opacity duration-200",
+                            !!onClick && "active:opacity-60 hover:opacity-20",
+                        )}
                         onClick={onClick}
                     />
                     <g
                         transform={iconTransform}
                         className="pointer-events-none"
                     >
-                        <IconG icon={icon} />
+                        <IconG
+                            icon={icon}
+                            color={onClick ? "#fff" : "#ffffff77"}
+                        />
                     </g>
                 </g>
             </Fragment>

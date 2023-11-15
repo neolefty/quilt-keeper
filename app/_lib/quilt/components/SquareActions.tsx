@@ -30,13 +30,16 @@ export const SquareActions = ({
         </g>
     )
 }
+
+type MaybeFunction = (() => void) | undefined
+
 const useSquareActions = ({
     square,
     setSquare,
 }: {
     square: SingleSquare
     setSquare: (square: Square) => void
-}): Partial<Record<keyof typeof IconPaths, () => void>> => {
+}): Partial<Record<keyof typeof IconPaths, MaybeFunction>> => {
     const { colors } = useColors()
     return useMemo(
         () => ({

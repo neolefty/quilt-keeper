@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mantine/hooks": "^7.2.1",
+    "clsx": "^2.0.0",
     "hsluv": "^1.0.1",
     "next": "14.0.1",
     "react": "^18",
