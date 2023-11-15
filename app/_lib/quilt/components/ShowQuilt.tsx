@@ -12,7 +12,7 @@ export const ShowQuilt = () => {
     const [width, height] = quiltDimensions(quilt)
     const quiltHeight = baseLength * height * 2
     const quiltWidth = baseLength * width * 2
-    const controlMargin = Math.sqrt(quiltWidth * quiltHeight) * 0.06
+    const controlMargin = Math.sqrt(quiltWidth * quiltHeight) * 0.05
     return (
         <svg
             className="max-h-full max-w-full quiltArea"

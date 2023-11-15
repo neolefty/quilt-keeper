@@ -28,10 +28,10 @@ export function QuiltMarginControls({
                     height={controlMargin}
                     viewBox="0 0 24 24"
                 >
-                    <rect width={24} height={24} fill="#000" />
+                    <rect width={24} height={24} fill="#fff" />
                     <path
                         d="M4 12L20 12M12 4L12 20z"
-                        stroke="#fff"
+                        stroke="#000"
                         strokeWidth={4}
                         strokeLinecap="butt"
                     />
@@ -43,10 +43,10 @@ export function QuiltMarginControls({
                     height={controlMargin}
                     viewBox="0 0 24 24"
                 >
-                    <rect width={24} height={24} fill="#000" />
+                    <rect width={24} height={24} fill="#fff" />
                     <path
                         d="M4 12L20 12z"
-                        stroke="#fff"
+                        stroke="#000"
                         strokeWidth={4}
                         strokeLinecap="butt"
                     />
@@ -116,8 +116,8 @@ const QuiltMarginBar = ({
     return (
         <>
             <rect
-                opacity={0}
-                className="cursor-pointer transition-opacity duration-200 active:opacity-60 hover:opacity-20"
+                opacity={0.12}
+                className="cursor-pointer transition-opacity duration-200 active:opacity-80 hover:opacity-40"
                 x={0}
                 y={0}
                 width={isHorizontal ? width / 2 : width}
@@ -127,8 +127,8 @@ const QuiltMarginBar = ({
             />
             {canRemove && (
                 <rect
-                    opacity={0}
-                    className="cursor-pointer transition-opacity duration-200 active:opacity-60 hover:opacity-20"
+                    opacity={0.12}
+                    className="cursor-pointer transition-opacity duration-200 active:opacity-80 hover:opacity-40"
                     x={isHorizontal ? width / 2 : 0}
                     y={isHorizontal ? 0 : height / 2}
                     width={isHorizontal ? width / 2 : width}
