@@ -61,7 +61,7 @@ export const CircleOfButtons = ({
     const buttonRadius = outerRadius - ringRadius
     return Object.entries(icons).map((entry, idx) => {
         const [icon, onClick] = entry as IconEntry
-        const angle = (idx * 2 * Math.PI) / n
+        const angle = (idx * 2 * Math.PI) / n - Math.PI / 2
         const x = Math.cos(angle) * ringRadius
         const y = Math.sin(angle) * ringRadius
         // Note on layout and hover: Circle needs to not be a sibling of the hover rect so that

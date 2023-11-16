@@ -27,5 +27,7 @@ const diagonal = `M${B} ${B}L-${B} -${B}L-${B} ${B}z`
 // quarter-circle
 const wedge = `M${B} ${B}A200 200 0 0 1 -${B} -${B}L${B} -${B}z`
 
-const paths = { dagger, diagonal, diamond, heart, square, wedge }
+const sled = `M0 ${B}L${B} -${B}L${B} ${B}z`
+
+const paths = { dagger, diagonal, diamond, heart, sled, square, wedge }
 export default paths

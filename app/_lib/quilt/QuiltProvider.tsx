@@ -1,4 +1,10 @@
-import { Square } from "../square/Square"
+import {
+    GridOfSquares,
+    isGrid,
+    SingleSquare,
+    Square,
+    Tile,
+} from "../square/Square"
 import {
     createContext,
     PropsWithChildren,
@@ -9,7 +15,7 @@ import {
 } from "react"
 import templates from "../square/Templates"
 import { useColors } from "../color/state/ColorsProvider"
-import { Pair } from "../FixedLengthArrays"
+import { OneByOneOrMore, Pair } from "../FixedLengthArrays"
 import {
     createRandomQuilt,
     fillInMissingColors,
@@ -17,7 +23,7 @@ import {
 } from "./quiltFunctions"
 
 interface QuiltState {
-    quilt: Square
+    quilt: GridOfSquares
     setQuilt: (quilt: Square) => void
     redistributeColors: () => void
     resetPattern: () => void
@@ -27,14 +33,18 @@ const tni = () => {
     throw new Error("not implemented")
 }
 
+const defaultTile: Tile = {
+    groupColorMap: { NaN: NaN },
+    template: templates.square,
+}
+
+const defaultSquare: SingleSquare = {
+    tiles: [defaultTile],
+}
+
 const defaultQuiltState: QuiltState = {
     quilt: {
-        tiles: [
-            {
-                groupColorMap: { NaN: NaN },
-                template: templates.square,
-            },
-        ],
+        tiles: [[defaultSquare]],
     },
     setQuilt: tni,
     redistributeColors: tni,
@@ -57,7 +67,10 @@ export const QuiltProvider = ({
     const quiltState: QuiltState = useMemo(
         () => ({
             quilt,
-            setQuilt,
+            setQuilt: (quilt: Square) => {
+                if (isGrid(quilt)) setQuilt(quilt)
+                else setQuilt({ tiles: [[quilt]] })
+            },
             resetPattern: () => setQuilt(defaultQuiltState.quilt),
             redistributeColors: () =>
                 setQuilt(redistributeColors(quilt, colors)),
@@ -67,8 +80,8 @@ export const QuiltProvider = ({
     useEffect(() => {
         if (colors.length === 0 || quilt === defaultQuiltState.quilt) return
         const square = fillInMissingColors(quilt, colors)
-        if (square !== quilt) setQuilt(square)
-    }, [colors, quilt])
+        if (square !== quilt) quiltState.setQuilt(square)
+    }, [colors, quilt, quiltState])
     return (
         <QuiltContext.Provider value={quiltState}>
             {children}

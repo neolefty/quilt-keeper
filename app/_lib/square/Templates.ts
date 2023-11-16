@@ -55,6 +55,14 @@ const wedge: Template = {
     ],
 }
 
-const templates = { dagger, diagonal, diamond, heart, square, wedge }
+const sled: Template = {
+    name: "sled",
+    paths: [
+        { group: 0, svgPath: paths.square },
+        { group: 1, svgPath: paths.sled },
+    ],
+}
+
+const templates = { dagger, diagonal, diamond, heart, sled, square, wedge }
 
 export default templates

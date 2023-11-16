@@ -11,17 +11,25 @@ import {
 import templates from "../square/Templates"
 import { OneOrMore } from "../FixedLengthArrays"
 
+type GridOrSingle<T extends Square> = T extends GridOfSquares
+    ? GridOfSquares
+    : SingleSquare
+
 /** Assign random colors to all tiles in a quilt. */
-export const redistributeColors = (
-    square: Square,
+export const redistributeColors = <T extends Square>(
+    square: T,
     colors: ColorPodge,
-): Square => {
+): GridOrSingle<T> => {
     if (isGrid(square)) {
         return {
             tiles: square.tiles.map((column) =>
                 column.map((square) => redistributeColors(square, colors)),
             ),
-        } as GridOfSquares // cast to reassure about non-empty arrays
+        } as GridOrSingle<T> // cast to reassure about non-empty arrays and due to limitations of TypeScript
+        // See https://stackoverflow.com/questions/70553130/typescript-generic-conditional-type-as-return-value-for-generic-function
+        // Another option that I couldn't get to work involves a second generic type parameter:
+        // https://dev.to/zirkelc/how-to-return-different-types-from-functions-in-typescript-2a2h
+        // The problem: <T, R = GridOrSingle<T>> means R *defaults* to GridOrSingle<T> but really could be anything.
     } else {
         return {
             tiles: [
@@ -33,9 +41,10 @@ export const redistributeColors = (
                     ),
                 },
             ],
-        }
+        } as SingleSquare as GridOrSingle<T>
     }
 }
+
 export const numberRange = (start: number, end?: number) => {
     const [realStart, realEnd] = end === undefined ? [0, start] : [start, end]
     return Array.from({ length: realEnd - realStart }, (_, i) => i + realStart)
