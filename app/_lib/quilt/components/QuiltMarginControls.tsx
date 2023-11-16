@@ -92,6 +92,10 @@ const horizontal = {
     bottom: true,
 }
 
+const marginClass =
+    "cursor-pointer transition-opacity duration-200 active:opacity-80 hover:opacity-40"
+const marginOpacity = 0.07
+
 const QuiltMarginBar = ({
     side,
     height,
@@ -117,8 +121,8 @@ const QuiltMarginBar = ({
     return (
         <>
             <rect
-                opacity={0.12}
-                className="cursor-pointer transition-opacity duration-200 active:opacity-80 hover:opacity-40"
+                opacity={marginOpacity}
+                className={marginClass}
                 x={0}
                 y={0}
                 width={isHorizontal ? width / 2 : width}
@@ -128,8 +132,8 @@ const QuiltMarginBar = ({
             />
             {canRemove && (
                 <rect
-                    opacity={0.12}
-                    className="cursor-pointer transition-opacity duration-200 active:opacity-80 hover:opacity-40"
+                    opacity={marginOpacity}
+                    className={marginClass}
                     x={isHorizontal ? width / 2 : 0}
                     y={isHorizontal ? 0 : height / 2}
                     width={isHorizontal ? width / 2 : width}
@@ -156,7 +160,7 @@ const Corners = ({ m, h, w }: { m: number; h: number; w: number }) => {
             transform={`translate(${t})`}
             width={m}
             height={m}
-            opacity={0.12}
+            opacity={marginOpacity}
             fill="#fff"
         />
     ))
