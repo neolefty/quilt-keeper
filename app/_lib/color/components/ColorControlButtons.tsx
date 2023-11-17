@@ -17,13 +17,6 @@ export const ColorControlButtons = () => {
     return (
         <div className="grid grid-cols-2 gap-3">
             <button
-                title="Enhance colors"
-                className="btn btn-primary"
-                onClick={disperse}
-            >
-                <IconSvg icon="sparkle" />
-            </button>
-            <button
                 title="Redistribute colors"
                 className="btn btn-primary"
                 onClick={redistributeColors}
@@ -38,8 +31,15 @@ export const ColorControlButtons = () => {
                 <IconSvg icon="d6" />
             </button>
             <button
+                title="Enhance colors"
+                className="btn btn-secondary"
+                onClick={disperse}
+            >
+                <IconSvg icon="sparkle" />
+            </button>
+            <button
                 title="Add a new color"
-                className="btn btn-primary"
+                className="btn btn-secondary"
                 onClick={() =>
                     sortColors(
                         // the more colors there are, the longer it takes to check distance,

@@ -8,7 +8,7 @@ type IconSvgProps = SVGProps<SVGElement> & {
 
 export const IconSvg = ({
     icon,
-    color = "#ddd",
+    color = "#fff",
     viewBox = iconViewbox,
     height = 28,
     width = 28,
