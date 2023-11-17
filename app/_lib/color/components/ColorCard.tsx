@@ -38,7 +38,7 @@ export const ColorCard = ({
     }, [colors, idx, setColors])
     return (
         <div
-            className="card shadow-xl text-center flex flex-row items-center justify-center px-1"
+            className="card shadow-xl text-center flex flex-row items-center justify-center pl-2 pr-1"
             key={idx}
             style={{
                 backgroundColor: color.hexString,
@@ -46,14 +46,24 @@ export const ColorCard = ({
             }}
         >
             <span className="flex-1 text-sm">{color.hexString}</span>
-            <button className="btn btn-ghost px-1" onClick={randomizeColor}>
+            <button
+                title="Randomize colors"
+                className="btn btn-ghost px-1"
+                onClick={randomizeColor}
+            >
                 <IconSvg icon="d6" />
             </button>
             <TogglePinnedButton
                 checked={color.isPinned}
                 onChange={handleTogglePinned}
+                title={
+                    color.isPinned
+                        ? "Unpin this color — allow it to be enhanced"
+                        : "Pin this color — protect it from enhancement"
+                }
             />
             <button
+                title="Delete this color"
                 className="btn btn-ghost px-1"
                 onClick={() => setColors(colors.removeColor(idx))}
             >
@@ -64,14 +74,16 @@ export const ColorCard = ({
 }
 
 const TogglePinnedButton = ({
+    title,
     checked,
     onChange,
 }: {
+    title?: string
     checked: boolean
     onChange: () => void
 }) => {
     return (
-        <div className="btn btn-ghost px-1">
+        <div className="btn btn-ghost px-1" title={title}>
             <label className="swap">
                 <input type="checkbox" checked={checked} onChange={onChange} />
                 <div className="swap-off">

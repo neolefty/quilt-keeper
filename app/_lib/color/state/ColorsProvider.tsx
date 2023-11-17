@@ -41,7 +41,7 @@ export const ColorsProvider = ({
     useEffect(() => {
         // start with the default number of colors
         if (colors.length === 0 && defaultCount > 0)
-            sortColors(ColorPodge.construct(defaultCount))
+            sortColors(ColorPodge.construct(defaultCount, false, 5))
     }, [defaultCount, colors, sortColors])
     const state = useMemo<ColorsState>(
         () => ({

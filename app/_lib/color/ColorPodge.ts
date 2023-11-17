@@ -25,10 +25,14 @@ export class ColorPodge {
     static MAX_DISPERSION_HISTORY = 320
     static SETTLED_THRESHOLD = 150
 
-    static construct = (numColors: number, anneal = true) => {
+    static construct = (
+        numColors: number,
+        anneal = true,
+        distanceTrials: number = 1,
+    ) => {
         let result = new ColorPodge()
         while (result.driftColors.length < numColors)
-            result = result.addRandomColor()
+            result = result.addRandomColor(distanceTrials)
         if (anneal)
             ColorPodge.ANNEAL.forEach((x) => (result = result.disperse(x)))
         return result
