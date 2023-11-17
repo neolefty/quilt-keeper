@@ -37,6 +37,19 @@ const RotateRight = ({ color }: InnerIconProps) => (
     </g>
 )
 
+const Reverse = ({ color }: InnerIconProps) => (
+    <g viewBox="0 0 24 24">
+        <path
+            d="M3 9H16.5C18.9853 9 21 11.0147 21 13.5C21 15.9853 18.9853 18 16.5 18H12M3 9L7 5M3 9L7 13"
+            stroke={color}
+            fill="none"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </g>
+)
+
 const D6 = ({ color }: InnerIconProps) => (
     <g
         strokeWidth={2}
@@ -100,15 +113,40 @@ const FlipDown = ({ color }: InnerIconProps) => (
     </g>
 )
 
+const Plus = ({ color }: InnerIconProps) => (
+    <g viewBox="0 0 24 24">
+        <path
+            d="M4 12L20 12M12 4L12 20z"
+            stroke={color}
+            strokeWidth={4}
+            strokeLinecap="butt"
+        />
+    </g>
+)
+
+const Minus = ({ color }: InnerIconProps) => (
+    <g viewBox="0 0 24 24">
+        <path
+            d="M4 12L20 12z"
+            stroke={color}
+            strokeWidth={4}
+            strokeLinecap="butt"
+        />
+    </g>
+)
+
 export const IconPaths = {
     d6: D6,
     paintBrush: PaintBrush,
     reroute: Reroute,
     rotateLeft: RotateLeft,
     rotateRight: RotateRight,
-    trash: Trash,
+    reverse: Reverse,
     flipUp: FlipUp,
     flipRight: FlipRight,
     flipDown: FlipDown,
     flipLeft: FlipLeft,
+    plus: Plus,
+    minus: Minus,
+    trash: Trash,
 }

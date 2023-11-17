@@ -1,4 +1,5 @@
 import { useColors } from "../state/ColorsProvider"
+import { IconSvg } from "../../icons/IconSvg"
 
 export const ColorControlButtons = () => {
     const { colors, sortColors } = useColors()
@@ -32,7 +33,7 @@ export const ColorControlButtons = () => {
                     )
                 }
             >
-                Add
+                <IconSvg icon="plus" />
             </button>
         </div>
     )

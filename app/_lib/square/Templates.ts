@@ -7,6 +7,7 @@ const dagger: Template = {
     paths: [
         { group: 0, svgPath: paths.square },
         { group: 1, svgPath: paths.dagger },
+        { group: 2, svgPath: paths.corner },
     ],
 }
 
@@ -63,6 +64,6 @@ const sled: Template = {
     ],
 }
 
-const templates = { dagger, diagonal, diamond, heart, sled, square, wedge }
+const templates = { dagger, diagonal, diamond, heart, /*sled, */ square, wedge }
 
 export default templates

@@ -1,8 +1,7 @@
 import { useMemo } from "react"
-import { SingleSquare } from "../../square/Square"
+import { mapQuiltTiles, SingleSquare } from "../../square/Square"
 import { baseLength, baseLength as B } from "../../square/Paths"
-import { CircleOfButtons } from "./CircleOfButtons"
-import { IconPaths } from "../../icons/IconPaths"
+import { CircleOfButtons, IconCircle } from "./CircleOfButtons"
 import { useColors } from "../../color/state/ColorsProvider"
 import { createRandomSquare, redistributeColors } from "../quiltFunctions"
 import { SingleSquareProps } from "./SingleSquareProps"
@@ -29,39 +28,47 @@ type MaybeFunction = (() => void) | undefined
 
 const useSquareActions = ({
     square,
-    x,
-    y,
     setSquare,
     flipCopySquare,
-}: SingleSquareProps): Partial<
-    Record<keyof typeof IconPaths, MaybeFunction>
-> => {
+}: SingleSquareProps): IconCircle => {
     const { colors } = useColors()
     return useMemo(
         () => ({
-            flipUp: () => flipCopySquare(0, -1),
-            rotateRight: () =>
-                setSquare({
-                    tiles: square.tiles.map((tile) => ({
-                        ...tile,
-                        rotation: ((tile.rotation ?? 0) + 90) % 360,
-                    })),
-                } as SingleSquare),
-            flipRight: () => flipCopySquare(1, 0),
-            d6: () => setSquare(createRandomSquare(colors)),
-            flipDown: () => flipCopySquare(0, 1),
-            paintBrush: () => setSquare(redistributeColors(square, colors)),
-            flipLeft: () => flipCopySquare(-1, 0),
-            rotateLeft: () =>
-                setSquare({
-                    tiles: square.tiles.map((tile) => ({
-                        ...tile,
-                        rotation: ((tile.rotation ?? 0) - 90) % 360,
-                    })),
-                } as SingleSquare),
-            // trash: undefined,
-            // reroute: undefined,
+            ring: {
+                flipUp: () => flipCopySquare(0, -1),
+                rotateRight: () =>
+                    setSquare(
+                        mapQuiltTiles(square, (tile) => ({
+                            ...tile,
+                            rotation: ((tile.rotation ?? 0) + 90) % 360,
+                        })),
+                    ),
+                flipRight: () => flipCopySquare(1, 0),
+                reverse: () =>
+                    setSquare(
+                        mapQuiltTiles(square, (tile) => ({
+                            ...tile,
+                            rotation: 360 - (tile.rotation ?? 0),
+                            mirror: !tile.mirror,
+                        })),
+                    ),
+                flipDown: () => flipCopySquare(0, 1),
+                paintBrush: () => setSquare(redistributeColors(square, colors)),
+                flipLeft: () => flipCopySquare(-1, 0),
+                rotateLeft: () =>
+                    setSquare(
+                        mapQuiltTiles(square, (tile) => ({
+                            ...tile,
+                            rotation: ((tile.rotation ?? 0) - 90) % 360,
+                        })),
+                    ),
+                // trash: undefined,
+                // reroute: undefined,
+            },
+            center: {
+                d6: () => setSquare(createRandomSquare(colors)),
+            },
         }),
-        [colors, setSquare, square],
+        [colors, flipCopySquare, setSquare, square],
     )
 }
