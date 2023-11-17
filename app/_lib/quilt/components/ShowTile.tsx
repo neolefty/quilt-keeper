@@ -1,6 +1,5 @@
 import { TemplatePath, Tile } from "../../square/Square"
 import { useColors } from "../../color/state/ColorsProvider"
-import { useHover } from "@mantine/hooks"
 
 const ShowPath = ({ tile, path }: { tile: Tile; path: TemplatePath }) => {
     const { colors } = useColors()

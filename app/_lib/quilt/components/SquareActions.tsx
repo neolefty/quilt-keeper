@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { mapQuiltTiles, SingleSquare } from "../../square/Square"
+import { mapQuiltTiles } from "../../square/Square"
 import { baseLength, baseLength as B } from "../../square/Paths"
 import { CircleOfButtons, IconCircle } from "./CircleOfButtons"
 import { useColors } from "../../color/state/ColorsProvider"
@@ -23,8 +23,6 @@ export const SquareActions = (props: SingleSquareProps) => {
         </g>
     )
 }
-
-type MaybeFunction = (() => void) | undefined
 
 const useSquareActions = ({
     square,
