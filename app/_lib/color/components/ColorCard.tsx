@@ -2,10 +2,9 @@ import { useCallback } from "react"
 import Image from "next/image"
 import pinCircle from "../../../../public/pin-circle.svg"
 import pinnedCircle from "../../../../public/pinned-circle.svg"
-import trash from "../../../../public/trash.svg"
 import { DriftColor } from "../DriftColor"
 import { useColors } from "../state/ColorsProvider"
-import { IconSvg, iconViewbox } from "../../icons/IconSvg"
+import { IconSvg } from "../../icons/IconSvg"
 
 export const ColorCard = ({
     color,
@@ -67,7 +66,7 @@ export const ColorCard = ({
                 className="btn btn-ghost px-1"
                 onClick={() => setColors(colors.removeColor(idx))}
             >
-                <Image src={trash} alt="delete" width={28} height={28} />
+                <IconSvg icon="trash" />
             </button>
         </div>
     )
