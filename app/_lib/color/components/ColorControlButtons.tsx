@@ -7,7 +7,7 @@ export const ColorControlButtons = () => {
     const { colors, sortColors } = useColors()
     const { redistributeColors, resetPattern } = useQuilt()
     const disperse = useCallback(() => {
-        const anneal = [12, 5, 2, 1]
+        const anneal = [6, 4, 2, 1]
         let newColors = colors
         anneal.forEach((step) => {
             if (newColors === colors) newColors = colors.disperse(step)
