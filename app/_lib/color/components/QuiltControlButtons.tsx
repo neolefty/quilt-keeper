@@ -3,7 +3,7 @@ import { IconSvg } from "../../icons/IconSvg"
 import { useCallback } from "react"
 import { useQuilt } from "../../quilt/QuiltProvider"
 
-export const ColorControlButtons = () => {
+export const QuiltControlButtons = () => {
     const { colors, sortColors } = useColors()
     const { redistributeColors, resetPattern } = useQuilt()
     const disperse = useCallback(() => {
