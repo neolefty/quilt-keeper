@@ -19,6 +19,7 @@ const tni = () => {
 
 const defaultEditSquareState: EditSquareState = {
     setEditingSquare: tni,
+    cancelEditingSquare: tni,
 }
 
 const EditSquareContext = createContext(defaultEditSquareState)

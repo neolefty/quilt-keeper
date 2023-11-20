@@ -2,10 +2,11 @@ import { useColors } from "../state/ColorsProvider"
 import { IconSvg } from "../../icons/IconSvg"
 import { useCallback } from "react"
 import { useQuilt } from "../../quilt/state/QuiltProvider"
+import { stirInNewColor } from "../../quilt/quiltFunctions"
 
 export const QuiltControlButtons = () => {
     const { colors, sortColors } = useColors()
-    const { redistributeColors, resetPattern } = useQuilt()
+    const { redistributeColors, resetPattern, quilt, setQuilt } = useQuilt()
     const disperse = useCallback(() => {
         const anneal = [6, 4, 2, 1]
         let newColors = colors
@@ -15,12 +16,15 @@ export const QuiltControlButtons = () => {
         if (newColors !== colors) sortColors(newColors)
     }, [colors, sortColors])
     const addColor = useCallback(() => {
-        sortColors(
-            // the more colors there are, the longer it takes to check distance,
-            // and also the less it matters if the new color is close to the others.
-            colors.addRandomColor(Math.max(5, 100 / colors.length)),
+        // the more colors there are, the longer it takes to check distance,
+        // and also the less it matters if the new color is close to the others.
+        const [newColors, newColor] = colors.addRandomColor(
+            Math.max(5, 100 / colors.length),
         )
-    }, [colors, sortColors])
+        sortColors(newColors)
+        const colorCount = newColors.length
+        setQuilt(stirInNewColor(quilt, colorCount, newColor))
+    }, [colors, quilt, setQuilt, sortColors])
     return (
         <div className="grid grid-cols-2 gap-3">
             <button

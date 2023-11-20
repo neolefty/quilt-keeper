@@ -32,7 +32,7 @@ export class ColorPodge {
     ) => {
         let result = new ColorPodge()
         while (result.driftColors.length < numColors)
-            result = result.addRandomColor(distanceTrials)
+            result = result.addRandomColor(distanceTrials)[0]
         if (anneal)
             ColorPodge.ANNEAL.forEach((x) => (result = result.disperse(x)))
         return result
@@ -75,12 +75,16 @@ export class ColorPodge {
      * Add a random color to this podge.
      * @param distanceTrials add the Nth random color that is furthest from existing colors.
      */
-    addRandomColor(distanceTrials = 1): ColorPodge {
-        return new ColorPodge(
-            [...this.driftColors, this.lookForDistantColor(distanceTrials)],
-            this.neverSettle,
-            // reset settlement tracking because a new color is in the mix
-        )
+    addRandomColor(distanceTrials = 1): [ColorPodge, DriftColor] {
+        const newColor = this.lookForDistantColor(distanceTrials)
+        return [
+            new ColorPodge(
+                [...this.driftColors, newColor],
+                this.neverSettle,
+                // reset settlement tracking because a new color is in the mix
+            ),
+            newColor,
+        ]
     }
 
     removeColor(idx: number): ColorPodge {

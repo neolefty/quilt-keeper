@@ -10,6 +10,7 @@ import {
 } from "../square/Square"
 import templates from "../square/Templates"
 import { OneOrMore } from "../FixedLengthArrays"
+import { DriftColor } from "../color/DriftColor"
 
 type GridOrSingle<T extends Square> = T extends GridOfSquares
     ? GridOfSquares
@@ -189,3 +190,28 @@ export const removeStripe = (
 
 export const quiltDimensions = (quilt: Square) =>
     isGrid(quilt) ? [quilt.tiles.length, quilt.tiles[0].length] : [1, 1]
+
+/**
+ * Add a new color to random tiles in a quilt.
+ * @param quilt
+ * @param odds 1 in odds chance of changing a tile
+ * @param newColor
+ */
+export const stirInNewColor = (
+    quilt: Square,
+    odds: number,
+    newColor: DriftColor,
+) =>
+    mapQuiltTiles(quilt, (tile) => {
+        let changed = false
+        const newGroupColorMap = Object.fromEntries(
+            Object.entries(tile.groupColorMap).map(([group, colorKey]) => {
+                // if there are 6 colors, set 1 out of 6 tiles to the new color
+                if (Math.random() * odds < 1) {
+                    changed = true
+                    return [group, newColor.key]
+                } else return [group, colorKey]
+            }),
+        )
+        return changed ? { ...tile, groupColorMap: newGroupColorMap } : tile
+    })
