@@ -1,4 +1,4 @@
-import { useQuilt } from "../QuiltProvider"
+import { useQuilt } from "../state/QuiltProvider"
 import { useColors } from "../../color/state/ColorsProvider"
 import { useCallback } from "react"
 import { isGrid } from "../../square/Square"

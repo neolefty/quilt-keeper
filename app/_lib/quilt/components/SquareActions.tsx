@@ -1,24 +1,18 @@
 import { useMemo } from "react"
 import { mapQuiltTiles } from "../../square/Square"
-import { baseLength, baseLength as B } from "../../square/Paths"
+import { baseLength } from "../../square/Paths"
 import { CircleOfButtons, IconCircle } from "./CircleOfButtons"
 import { useColors } from "../../color/state/ColorsProvider"
-import { createRandomSquare, redistributeColors } from "../quiltFunctions"
+import { createRandomSquare } from "../quiltFunctions"
 import { SingleSquareProps } from "./SingleSquareProps"
+import { useEditSquare } from "../state/EditSquareProvider"
+import { GlassSquare } from "./GlassSquare"
 
 export const SquareActions = (props: SingleSquareProps) => {
     const icons = useSquareActions(props)
     return (
         <g>
-            <rect
-                opacity={0}
-                className="hover:opacity-100 transition-opacity duration-200"
-                fill="#00000033"
-                x={-B}
-                y={-B}
-                width={B * 2}
-                height={B * 2}
-            />
+            <GlassSquare />
             <CircleOfButtons icons={icons} outerRadius={baseLength * 0.9} />
         </g>
     )
@@ -30,9 +24,10 @@ const useSquareActions = ({
     flipCopySquare,
 }: SingleSquareProps): IconCircle => {
     const { colors } = useColors()
+    const { editingSquare, setEditingSquare } = useEditSquare()
     return useMemo(
         () => ({
-            ring: {
+            ring: suppressAll({
                 flipUp: () => flipCopySquare(0, -1),
                 rotateRight: () =>
                     setSquare(
@@ -51,7 +46,8 @@ const useSquareActions = ({
                         })),
                     ),
                 flipDown: () => flipCopySquare(0, 1),
-                paintBrush: () => setSquare(redistributeColors(square, colors)),
+                paintBrush: () =>
+                    setEditingSquare(editingSquare ? undefined : square),
                 flipLeft: () => flipCopySquare(-1, 0),
                 rotateLeft: () =>
                     setSquare(
@@ -62,11 +58,32 @@ const useSquareActions = ({
                     ),
                 // trash: undefined,
                 // reroute: undefined,
-            },
-            center: {
+            }),
+            center: suppressAll({
                 d6: () => setSquare(createRandomSquare(colors)),
-            },
+            }),
         }),
-        [colors, flipCopySquare, setSquare, square],
+        [
+            colors,
+            editingSquare,
+            flipCopySquare,
+            setEditingSquare,
+            setSquare,
+            square,
+        ],
     )
+}
+
+const suppressAll = (actions: Record<string, () => void>) => {
+    return Object.fromEntries(
+        Object.entries(actions).map(([key, fn]) => [
+            key,
+            suppressPropagation(fn),
+        ]),
+    )
+}
+
+const suppressPropagation = (fn: () => void) => (e: React.MouseEvent) => {
+    e.stopPropagation()
+    fn()
 }

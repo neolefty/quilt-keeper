@@ -6,6 +6,13 @@ import { SingleSquareProps } from "./SingleSquareProps"
 import { useHover } from "@mantine/hooks"
 import { ShowTile } from "./ShowTile"
 import { SquareActions } from "./SquareActions"
+import { useEditSquare } from "../state/EditSquareProvider"
+import { GlassSquare } from "./GlassSquare"
+import { baseLength } from "../../square/Paths"
+import { CircleButton } from "./CircleOfButtons"
+import { redistributeColors } from "../quiltFunctions"
+import { useColors } from "../../color/state/ColorsProvider"
+import { useQuilt } from "../state/QuiltProvider"
 
 export interface ShowSingleSquareProps extends ShowSquareProps {
     square: SingleSquare
@@ -68,6 +75,9 @@ const RenderSingleSquare = (props: SingleSquareProps) => {
     // useHover isn't typed for SVG elements, but it works fine
     // @ts-ignore
     const { hovered, ref } = useHover<SVGGElement>()
+    const { editingSquare, cancelEditingSquare } = useEditSquare()
+    const editingThisSquare = editingSquare === props.square
+    const editingAnotherSquare = editingSquare && !editingThisSquare
     // const [width, height] = [tiles.length, tiles[0].length]
     // const scaleX = 1 / width
     // const scaleY = 1 / height
@@ -76,7 +86,32 @@ const RenderSingleSquare = (props: SingleSquareProps) => {
             {props.square.tiles.map((tile, idx) => (
                 <ShowTile tile={tile} key={idx} />
             ))}
-            {hovered && <SquareActions {...props} />}
+            {editingAnotherSquare && (
+                <GlassSquare
+                    className="opacity-100"
+                    fill="#00000077"
+                    onClick={cancelEditingSquare}
+                />
+            )}
+            {editingThisSquare && <EditSquare {...props} />}
+            {hovered && !editingSquare && <SquareActions {...props} />}
         </g>
+    )
+}
+
+const EditSquare = ({ square, setSquare }: SingleSquareProps) => {
+    const buttonRadius = 0.3 * baseLength
+    const { colors } = useColors()
+    const { setEditingSquare } = useEditSquare()
+    return (
+        <CircleButton
+            r={buttonRadius}
+            onClick={() => {
+                const newSquare = redistributeColors(square, colors)
+                setSquare(newSquare)
+                setEditingSquare(newSquare)
+            }}
+            icon="d6"
+        />
     )
 }

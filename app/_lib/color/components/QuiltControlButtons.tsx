@@ -1,7 +1,7 @@
 import { useColors } from "../state/ColorsProvider"
 import { IconSvg } from "../../icons/IconSvg"
 import { useCallback } from "react"
-import { useQuilt } from "../../quilt/QuiltProvider"
+import { useQuilt } from "../../quilt/state/QuiltProvider"
 
 export const QuiltControlButtons = () => {
     const { colors, sortColors } = useColors()
@@ -13,6 +13,13 @@ export const QuiltControlButtons = () => {
             if (newColors === colors) newColors = colors.disperse(step)
         })
         if (newColors !== colors) sortColors(newColors)
+    }, [colors, sortColors])
+    const addColor = useCallback(() => {
+        sortColors(
+            // the more colors there are, the longer it takes to check distance,
+            // and also the less it matters if the new color is close to the others.
+            colors.addRandomColor(Math.max(5, 100 / colors.length)),
+        )
     }, [colors, sortColors])
     return (
         <div className="grid grid-cols-2 gap-3">
@@ -40,13 +47,7 @@ export const QuiltControlButtons = () => {
             <button
                 title="Add a new color"
                 className="btn btn-secondary"
-                onClick={() =>
-                    sortColors(
-                        // the more colors there are, the longer it takes to check distance,
-                        // and also the less it matters if the new color is close to the others.
-                        colors.addRandomColor(Math.max(5, 100 / colors.length)),
-                    )
-                }
+                onClick={addColor}
             >
                 <IconSvg icon="plus" />
             </button>

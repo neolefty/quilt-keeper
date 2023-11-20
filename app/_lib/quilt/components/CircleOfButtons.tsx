@@ -8,7 +8,10 @@ type IconEntry = [keyof typeof IconPaths, (() => void) | undefined]
  *  Icons with undefined click handlers will be rendered as disabled buttons.
  */
 type IconActions = Partial<
-    Record<keyof typeof IconPaths, (() => void) | undefined>
+    Record<
+        keyof typeof IconPaths,
+        (() => void) | ((e: React.MouseEvent) => void) | undefined
+    >
 >
 
 export interface IconCircle {

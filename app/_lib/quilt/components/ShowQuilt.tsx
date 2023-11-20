@@ -1,5 +1,4 @@
-import { useColors } from "../../color/state/ColorsProvider"
-import { useQuilt } from "../QuiltProvider"
+import { useQuilt } from "../state/QuiltProvider"
 import { ShowSquare } from "./ShowSquare"
 import { baseLength } from "../../square/Paths"
 import { QuiltMarginControls } from "./QuiltMarginControls"
@@ -7,8 +6,6 @@ import { quiltDimensions } from "../quiltFunctions"
 
 export const ShowQuilt = () => {
     const { quilt, setQuilt } = useQuilt()
-    const { colors } = useColors()
-    const tiles = quilt.tiles
     const [width, height] = quiltDimensions(quilt)
     const quiltHeight = baseLength * height * 2
     const quiltWidth = baseLength * width * 2

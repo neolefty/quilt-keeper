@@ -4,7 +4,7 @@ import {
     SingleSquare,
     Square,
     Tile,
-} from "../square/Square"
+} from "../../square/Square"
 import {
     createContext,
     PropsWithChildren,
@@ -13,14 +13,14 @@ import {
     useMemo,
     useState,
 } from "react"
-import templates from "../square/Templates"
-import { useColors } from "../color/state/ColorsProvider"
-import { OneByOneOrMore, Pair } from "../FixedLengthArrays"
+import templates from "../../square/Templates"
+import { useColors } from "../../color/state/ColorsProvider"
+import { Pair } from "../../FixedLengthArrays"
 import {
     createRandomQuilt,
     fillInMissingColors,
     redistributeColors,
-} from "./quiltFunctions"
+} from "../quiltFunctions"
 
 interface QuiltState {
     quilt: GridOfSquares
