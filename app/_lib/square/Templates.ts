@@ -43,6 +43,37 @@ const heart: Template = {
     ],
 }
 
+const sliver: Template = {
+    name: "sliver",
+    paths: [
+        { group: 0, svgPath: paths.square },
+        { group: 1, svgPath: paths.dagger },
+        { group: 2, svgPath: paths.sliver },
+        { group: 3, svgPath: paths.corner },
+    ],
+}
+
+const doubleSliver: Template = {
+    name: "sliver",
+    paths: [
+        { group: 0, svgPath: paths.square },
+        { group: 1, svgPath: paths.dagger },
+        { group: 2, svgPath: paths.sliver },
+        { group: 3, svgPath: paths.splitSliver },
+        { group: 4, svgPath: paths.corner },
+    ],
+}
+
+const splitSliver: Template = {
+    name: "sliver",
+    paths: [
+        { group: 0, svgPath: paths.square },
+        { group: 1, svgPath: paths.dagger },
+        { group: 3, svgPath: paths.splitSliver },
+        { group: 4, svgPath: paths.corner },
+    ],
+}
+
 const square: Template = {
     name: "square",
     paths: [{ group: 0, svgPath: paths.square }],
@@ -64,6 +95,16 @@ const sled: Template = {
     ],
 }
 
-const templates = { dagger, diagonal, diamond, heart, /*sled, */ square, wedge }
+const templates = {
+    dagger,
+    diagonal,
+    diamond,
+    doubleSliver,
+    heart,
+    /*sled, sliver, */
+    splitSliver,
+    square,
+    wedge,
+}
 
 export default templates
