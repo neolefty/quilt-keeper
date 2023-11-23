@@ -32,7 +32,7 @@ hr {
 
 .quiltArea {
   /* hack to leave room for title */
-  max-height: calc(100vh - 60px);
+  /*max-height: calc(100vh - 60px);*/
 }
 
 /* see grid-pile: https://web.dev/articles/6-css-snippets-every-front-end-developer-should-know-in-2023 */
