@@ -21,7 +21,6 @@ export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
                         <div className="flex flex-row h-full">
                             <div className="bg-base-200 px-3 h-full min-w-fit flex flex-col gap-3">
                                 <AppTitle initialTitle={title} />
-                                <hr />
                                 <QuiltControls />
                             </div>
                             <div className="bg-base-100 w-full h-full">

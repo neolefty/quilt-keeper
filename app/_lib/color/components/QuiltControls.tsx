@@ -7,7 +7,6 @@ export const QuiltControls = () => {
     return (
         <div className="grid gap-3">
             <QuiltControlButtons />
-            <hr />
             {colors.driftColors.map((color, idx) => (
                 <ColorCard color={color} idx={idx} key={idx} />
             ))}

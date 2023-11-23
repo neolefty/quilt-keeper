@@ -4,6 +4,7 @@ import { useQuilt } from "../../quilt/state/QuiltProvider"
 import { stirInNewColor } from "../../quilt/quiltFunctions"
 import { useHistory } from "../../quilt/state/HistoryProvider"
 import { SvgIconButton } from "./SvgIconButton"
+import { Palette } from "../Palette"
 
 export const QuiltControlButtons = () => {
     const { colors, sortColors } = useColors()
@@ -23,45 +24,60 @@ export const QuiltControlButtons = () => {
         const colorCount = newColors.length
         setQuilt(stirInNewColor(quilt, colorCount, newColor))
     }, [colors, quilt, setQuilt, sortColors])
+    // preserve arrangement of colors in the quilt, but replace each one
+    const randomizePalette = useCallback(() => {
+        const randomColors = Palette.construct(colors.length, false, 3)
+        let newPalette = colors
+        randomColors.driftColors.forEach((color, idx) => {
+            newPalette = newPalette.replaceColor(idx, color, true)
+        })
+        sortColors(newPalette)
+    }, [colors, sortColors])
     return (
-        <div className="grid grid-cols-2 gap-3">
-            <SvgIconButton
-                title="Redistribute colors"
-                className="btn btn-primary"
-                onClick={redistributeColors}
-                icon="paintBrush"
-            />
-            <SvgIconButton
-                className="btn btn-primary"
-                onClick={resetPattern}
-                title="Randomize Quilt"
-                icon="d6"
-            />
-            <SvgIconButton
-                title="Enhance colors"
-                className="btn btn-secondary"
-                onClick={disperse}
-                icon="sparkle"
-            />
-            <SvgIconButton
-                title="Add a new color"
-                className="btn btn-secondary"
-                onClick={addColor}
-                icon="plus"
-            />
+        <div className="grid grid-cols-6 gap-3">
             <SvgIconButton
                 title="Undo"
-                className="btn btn-accent"
+                className="btn btn-accent col-span-3"
                 disabled={maxUndo === 0}
                 onClick={() => setHistoryRelative(-1)}
                 icon="rotateLeft"
             />
             <SvgIconButton
                 title="Redo"
-                className="btn btn-accent"
+                className="btn btn-accent col-span-3"
                 disabled={maxRedo === 0}
                 onClick={() => setHistoryRelative(1)}
                 icon="rotateRight"
+            />
+            <SvgIconButton
+                title="Redistribute colors"
+                className="btn btn-primary col-span-3"
+                onClick={redistributeColors}
+                icon="paintBrush"
+            />
+            <SvgIconButton
+                className="btn btn-primary col-span-3"
+                onClick={resetPattern}
+                title="Randomize Quilt"
+                icon="d6"
+            />
+            <SvgIconButton
+                title="Enhance colors"
+                className="btn btn-secondary col-span-2"
+                onClick={disperse}
+                icon="sparkle"
+            />
+            <SvgIconButton
+                title="Randomize Palette"
+                className="btn btn-secondary col-span-2"
+                onClick={randomizePalette}
+                icon="d6"
+            />
+            <SvgIconButton
+                title="Add a new color"
+                className="btn btn-secondary col-span-2"
+                onClick={addColor}
+                icon="plus"
             />
         </div>
     )

@@ -92,9 +92,16 @@ export class Palette {
         return new Palette(newColors, this.neverSettle)
     }
 
-    replaceColor(idx: number, color: DriftColor): Palette {
+    replaceColor(
+        idx: number,
+        newColor: DriftColor,
+        preserveAttributes?: boolean,
+    ): Palette {
         const newColors = [...this.driftColors]
-        newColors[idx] = color
+        const oldColor = this.driftColors[idx]
+        newColors[idx] = preserveAttributes
+            ? new DriftColor(newColor.cie, oldColor.key, oldColor.isPinned)
+            : newColor
         return new Palette(newColors, this.neverSettle)
     }
 

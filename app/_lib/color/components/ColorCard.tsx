@@ -19,16 +19,11 @@ export const ColorCard = ({
         [color, idx, colors, setColors],
     )
     const randomizeColor = useCallback(() => {
-        const oldColor = colors.driftColors[idx]
-        const replacement = colors.lookForDistantColor(colors.length + 2)
         setColors(
             colors.replaceColor(
                 idx,
-                new DriftColor(
-                    replacement.cie,
-                    oldColor.key,
-                    oldColor.isPinned,
-                ),
+                colors.lookForDistantColor(colors.length + 2),
+                true,
             ),
         )
     }, [colors, idx, setColors])
