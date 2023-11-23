@@ -19,6 +19,7 @@ import { Pair } from "../../FixedLengthArrays"
 import {
     createRandomQuilt,
     fillInMissingColors,
+    quiltDimensions,
     redistributeColors,
 } from "../quiltFunctions"
 
@@ -71,7 +72,10 @@ export const QuiltProvider = ({
                 if (isGrid(quilt)) setQuilt(quilt)
                 else setQuilt({ tiles: [[quilt]] })
             },
-            resetPattern: () => setQuilt(defaultQuiltState.quilt),
+            resetPattern: () => {
+                const [curWidth, curHeight] = quiltDimensions(quilt)
+                setQuilt(createRandomQuilt(curWidth, curHeight, colors))
+            },
             redistributeColors: () =>
                 setQuilt(redistributeColors(quilt, colors)),
         }),

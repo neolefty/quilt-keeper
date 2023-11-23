@@ -5,6 +5,7 @@ import pinnedCircle from "../../../../public/pinned-circle.svg"
 import { DriftColor } from "../DriftColor"
 import { useColors } from "../state/ColorsProvider"
 import { IconSvg } from "../../icons/IconSvg"
+import { SvgIconButton } from "./SvgIconButton"
 
 export const ColorCard = ({
     color,
@@ -45,13 +46,12 @@ export const ColorCard = ({
             }}
         >
             <span className="flex-1 text-sm">{color.hexString}</span>
-            <button
+            <SvgIconButton
                 title="Randomize colors"
                 className="btn btn-ghost px-1"
                 onClick={randomizeColor}
-            >
-                <IconSvg icon="d6" />
-            </button>
+                icon="d6"
+            />
             <TogglePinnedButton
                 checked={color.isPinned}
                 onChange={handleTogglePinned}
@@ -61,13 +61,12 @@ export const ColorCard = ({
                         : "Pin this color — protect it from enhancement"
                 }
             />
-            <button
+            <SvgIconButton
                 title="Delete this color"
                 className="btn btn-ghost px-1"
                 onClick={() => setColors(colors.removeColor(idx))}
-            >
-                <IconSvg icon="trash" />
-            </button>
+                icon="trash"
+            />
         </div>
     )
 }

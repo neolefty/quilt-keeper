@@ -1,12 +1,13 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { randomTitle } from "./Titles"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-    title: "Quilt Keeper",
-    description: "Keep what you like!",
+    title: randomTitle(),
+    description: "Design a quilt!",
 }
 
 export default function RootLayout({

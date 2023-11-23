@@ -4,6 +4,7 @@ import { useCallback } from "react"
 import { useQuilt } from "../../quilt/state/QuiltProvider"
 import { stirInNewColor } from "../../quilt/quiltFunctions"
 import { useHistory } from "../../quilt/state/HistoryProvider"
+import { SvgIconButton } from "./SvgIconButton"
 
 export const QuiltControlButtons = () => {
     const { colors, sortColors } = useColors()
@@ -29,56 +30,44 @@ export const QuiltControlButtons = () => {
     }, [colors, quilt, setQuilt, sortColors])
     return (
         <div className="grid grid-cols-2 gap-3">
-            <button
+            <SvgIconButton
                 title="Redistribute colors"
                 className="btn btn-primary"
                 onClick={redistributeColors}
-            >
-                <IconSvg icon="paintBrush" />
-            </button>
-            <button
+                icon="paintBrush"
+            />
+            <SvgIconButton
                 className="btn btn-primary"
                 onClick={resetPattern}
                 title="Reset Quilt"
-            >
-                <IconSvg icon="d6" />
-            </button>
-            <button
+                icon="d6"
+            />
+            <SvgIconButton
                 title="Enhance colors"
                 className="btn btn-secondary"
                 onClick={disperse}
-            >
-                <IconSvg icon="sparkle" />
-            </button>
-            <button
+                icon="sparkle"
+            />
+            <SvgIconButton
                 title="Add a new color"
                 className="btn btn-secondary"
                 onClick={addColor}
-            >
-                <IconSvg icon="plus" />
-            </button>
-            <button
+                icon="plus"
+            />
+            <SvgIconButton
                 title="Undo"
                 className="btn btn-accent"
                 disabled={maxUndo === 0}
                 onClick={() => setHistoryRelative(-1)}
-            >
-                <IconSvg
-                    icon="rotateLeft"
-                    color={maxUndo === 0 ? "#fff3" : undefined}
-                />
-            </button>
-            <button
+                icon="rotateLeft"
+            />
+            <SvgIconButton
                 title="Redo"
                 className="btn btn-accent"
                 disabled={maxRedo === 0}
                 onClick={() => setHistoryRelative(1)}
-            >
-                <IconSvg
-                    icon="rotateRight"
-                    color={maxRedo === 0 ? "#fff3" : undefined}
-                />
-            </button>
+                icon="rotateRight"
+            />
         </div>
     )
 }

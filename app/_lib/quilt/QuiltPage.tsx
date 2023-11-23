@@ -6,8 +6,13 @@ import { QuiltProvider } from "./state/QuiltProvider"
 import { ShowQuilt } from "./components/ShowQuilt"
 import { EditSquareProvider } from "./state/EditSquareProvider"
 import { HistoryProvider } from "./state/HistoryProvider"
+import { useState } from "react"
+import { randomTitle } from "../../Titles"
+import { SvgIconButton } from "../color/components/SvgIconButton"
 
-export const QuiltPage = () => {
+export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
+    const [title, setTitle] = useState(initialTitle)
+
     return (
         <ColorsProvider>
             <QuiltProvider defaultQuiltSize={[3, 5]}>
@@ -15,6 +20,8 @@ export const QuiltPage = () => {
                     <EditSquareProvider>
                         <div className="flex flex-row h-full">
                             <div className="bg-base-200 px-3 h-full min-w-fit flex flex-col gap-3">
+                                <AppTitle initialTitle={title} />
+                                <hr />
                                 <QuiltControls />
                             </div>
                             <div className="bg-base-100 w-full h-full">
@@ -25,5 +32,21 @@ export const QuiltPage = () => {
                 </HistoryProvider>
             </QuiltProvider>
         </ColorsProvider>
+    )
+}
+
+const AppTitle = ({ initialTitle }: { initialTitle: string }) => {
+    const [title, setTitle] = useState(initialTitle)
+    return (
+        <h1 className="text-3xl font-bold pt-2">
+            {title}
+            <SvgIconButton
+                title="Change title"
+                className="btn btn-ghost btn-sm px-0 ml-1"
+                onClick={() => setTitle(randomTitle(title))}
+                icon="d6"
+                color="#888"
+            />
+        </h1>
     )
 }
