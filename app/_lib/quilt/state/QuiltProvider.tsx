@@ -22,6 +22,7 @@ import {
     quiltDimensions,
     redistributeColors,
 } from "../quiltFunctions"
+import { useSizeFromUrlParams } from "../../useSizeFromUrlParams"
 
 interface QuiltState {
     quilt: GridOfSquares
@@ -55,12 +56,12 @@ export const defaultQuiltState: QuiltState = {
 const QuiltContext = createContext<QuiltState>(defaultQuiltState)
 
 export const QuiltProvider = ({
-    defaultQuiltSize = [4, 4],
+    defaultQuiltSize,
     children,
 }: PropsWithChildren<{ defaultQuiltSize?: Pair<number> }>) => {
     const { colors } = useColors()
     const [quilt, setQuilt] = useState(defaultQuiltState.quilt)
-    const [width, height] = defaultQuiltSize
+    const [width, height] = useSizeFromUrlParams(defaultQuiltSize)
     useEffect(() => {
         if (quilt === defaultQuiltState.quilt && colors.length > 0)
             setQuilt(createRandomQuilt(width, height, colors))
