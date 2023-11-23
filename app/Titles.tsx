@@ -2,22 +2,24 @@
 import { numberRange } from "./_lib/quilt/quiltFunctions"
 
 const titles = {
-    SquareScape: 3, // weight my faves
-    PatchPerfect: 3,
-    PlayPatch: 2,
-    QuiltQuest: 2,
+    PatchPerfect: 6, // weight my faves
+    SquareScape: 6,
+    PlayPatch: 4,
+    QuiltQuest: 4,
     // PatchPlayground: 1, // too long
-    CozyCraft: 1,
-    GridGroove: 1,
-    MosaicMaker: 1,
-    PatternPal: 1,
-    QuiltCanvas: 1,
-    PatchPalette: 1,
-    FabricFiesta: 1,
+    CozyCraft: 2,
+    GridGroove: 2,
+    MosaicMaker: 2,
+    PatternPal: 2,
+    QuiltCanvas: 2,
+    PatchPalette: 2,
+    FabricFiesta: 2,
+    QuiltThing: 1,
 }
 const titlesArray = Object.entries(titles)
     .map(([title, weight]) => numberRange(weight).map(() => title))
     .flat()
+export const initialTitle = titlesArray[0]
 export const randomTitle = (butNotThisOne?: string): string => {
     let result = butNotThisOne
     while (result === butNotThisOne || !result)
