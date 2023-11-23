@@ -36,15 +36,22 @@ export const QuiltControlButtons = () => {
     return (
         <div className="grid grid-cols-6 gap-3">
             <SvgIconButton
+                title="Save"
+                className="btn btn-accent col-span-2"
+                disabled={maxUndo === 0}
+                onClick={() => setHistoryRelative(-1)}
+                icon="floppyDisk"
+            />
+            <SvgIconButton
                 title="Undo"
-                className="btn btn-accent col-span-3"
+                className="btn btn-accent col-span-2"
                 disabled={maxUndo === 0}
                 onClick={() => setHistoryRelative(-1)}
                 icon="rotateLeft"
             />
             <SvgIconButton
                 title="Redo"
-                className="btn btn-accent col-span-3"
+                className="btn btn-accent col-span-2"
                 disabled={maxRedo === 0}
                 onClick={() => setHistoryRelative(1)}
                 icon="rotateRight"
