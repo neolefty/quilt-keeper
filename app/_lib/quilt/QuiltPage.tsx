@@ -15,7 +15,7 @@ export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
 
     return (
         <ColorsProvider>
-            <QuiltProvider defaultQuiltSize={[3, 5]}>
+            <QuiltProvider>
                 <HistoryProvider>
                     <EditSquareProvider>
                         <div className="flex flex-row h-full">

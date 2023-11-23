@@ -55,7 +55,7 @@ export const defaultQuiltState: QuiltState = {
 const QuiltContext = createContext<QuiltState>(defaultQuiltState)
 
 export const QuiltProvider = ({
-    defaultQuiltSize = [3, 5],
+    defaultQuiltSize = [4, 4],
     children,
 }: PropsWithChildren<{ defaultQuiltSize?: Pair<number> }>) => {
     const { colors } = useColors()
