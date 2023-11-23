@@ -7,16 +7,17 @@ import {
     useMemo,
     useState,
 } from "react"
-import { ColorPodge } from "../ColorPodge"
+import { Palette } from "../Palette"
+import { DriftColor } from "../DriftColor"
 
 interface ColorsState {
-    colors: ColorPodge
-    sortColors: (colors: ColorPodge) => void
-    setColors: (colors: ColorPodge) => void
+    colors: Palette
+    sortColors: (colors: Palette) => void
+    setColors: (colors: Palette) => void
 }
 
-const DEFAULT_STATE: ColorsState = {
-    colors: new ColorPodge(),
+const defaultColorsState: ColorsState = {
+    colors: new Palette(),
     sortColors: () => {
         throw new Error("not implemented")
     },
@@ -25,7 +26,7 @@ const DEFAULT_STATE: ColorsState = {
     },
 }
 
-const ColorsContext = createContext(DEFAULT_STATE)
+const ColorsContext = createContext(defaultColorsState)
 
 export const ColorsProvider = ({
     defaultCount = 4,
@@ -33,15 +34,16 @@ export const ColorsProvider = ({
 }: PropsWithChildren<{
     defaultCount?: number
 }>) => {
-    const [colors, setColors] = useState(new ColorPodge())
-    const sortColors = useCallback((newPodge: ColorPodge) => {
-        const sortedPodge = newPodge.sort((a, b) => a.hue - b.hue)
-        setColors(sortedPodge)
+    if (defaultCount < 1) throw new Error("defaultCount must be at least 1")
+    const [colors, setColors] = useState(new Palette())
+    const sortColors = useCallback((newPalette: Palette) => {
+        const sortedPalette = newPalette.sort(rainbowOrder)
+        setColors(sortedPalette)
     }, [])
     useEffect(() => {
         // start with the default number of colors
-        if (colors.length === 0 && defaultCount > 0)
-            sortColors(ColorPodge.construct(defaultCount, false, 5))
+        if (colors.length === 0)
+            sortColors(Palette.construct(defaultCount, false, 5))
     }, [defaultCount, colors, sortColors])
     const state = useMemo<ColorsState>(
         () => ({
@@ -57,5 +59,7 @@ export const ColorsProvider = ({
         </ColorsContext.Provider>
     )
 }
+
+const rainbowOrder = (a: DriftColor, b: DriftColor) => a.hue - b.hue
 
 export const useColors = () => useContext(ColorsContext)

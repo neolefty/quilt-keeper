@@ -42,7 +42,7 @@ const defaultSquare: SingleSquare = {
     tiles: [defaultTile],
 }
 
-const defaultQuiltState: QuiltState = {
+export const defaultQuiltState: QuiltState = {
     quilt: {
         tiles: [[defaultSquare]],
     },

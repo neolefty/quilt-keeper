@@ -3,10 +3,12 @@ import { IconSvg } from "../../icons/IconSvg"
 import { useCallback } from "react"
 import { useQuilt } from "../../quilt/state/QuiltProvider"
 import { stirInNewColor } from "../../quilt/quiltFunctions"
+import { useHistory } from "../../quilt/state/HistoryProvider"
 
 export const QuiltControlButtons = () => {
     const { colors, sortColors } = useColors()
     const { redistributeColors, resetPattern, quilt, setQuilt } = useQuilt()
+    const { setHistoryRelative, maxRedo, maxUndo } = useHistory()
     const disperse = useCallback(() => {
         const anneal = [6, 4, 2, 1]
         let newColors = colors
@@ -54,6 +56,28 @@ export const QuiltControlButtons = () => {
                 onClick={addColor}
             >
                 <IconSvg icon="plus" />
+            </button>
+            <button
+                title="Undo"
+                className="btn btn-accent"
+                disabled={maxUndo === 0}
+                onClick={() => setHistoryRelative(-1)}
+            >
+                <IconSvg
+                    icon="rotateLeft"
+                    color={maxUndo === 0 ? "#fff3" : undefined}
+                />
+            </button>
+            <button
+                title="Redo"
+                className="btn btn-accent"
+                disabled={maxRedo === 0}
+                onClick={() => setHistoryRelative(1)}
+            >
+                <IconSvg
+                    icon="rotateRight"
+                    color={maxRedo === 0 ? "#fff3" : undefined}
+                />
             </button>
         </div>
     )

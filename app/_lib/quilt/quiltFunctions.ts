@@ -1,4 +1,4 @@
-import { ColorPodge } from "../color/ColorPodge"
+import { Palette } from "../color/Palette"
 import {
     GridOfSquares,
     isGrid,
@@ -19,7 +19,7 @@ type GridOrSingle<T extends Square> = T extends GridOfSquares
 /** Assign random colors to all tiles in a quilt. */
 export const redistributeColors = <T extends Square>(
     square: T,
-    colors: ColorPodge,
+    colors: Palette,
 ): GridOrSingle<T> => {
     if (isGrid(square)) {
         return {
@@ -63,7 +63,7 @@ function randomValue<T>(items: Record<string, T>): T {
  */
 export const fillInMissingColors = (
     square: Square,
-    colors: ColorPodge,
+    colors: Palette,
 ): Square => {
     let changed = false
     const result = mapQuiltTiles(square, (tile) => {
@@ -89,7 +89,7 @@ export const fillInMissingColors = (
 export const createRandomQuilt = (
     width: number,
     height: number,
-    colors: ColorPodge,
+    colors: Palette,
 ): GridOfSquares => {
     if (width < 1 || height < 1)
         throw new Error(
@@ -103,10 +103,10 @@ export const createRandomQuilt = (
     // annotate as non-zero length
     return { tiles } as GridOfSquares
 }
-export const createRandomSquare = (podge: ColorPodge): SingleSquare => {
+export const createRandomSquare = (palette: Palette): SingleSquare => {
     const template = randomValue(templates)
     const tile: Tile = {
-        groupColorMap: assignRandomColors(template.paths, podge),
+        groupColorMap: assignRandomColors(template.paths, palette),
         rotation: Math.floor(Math.random() * 4) * 90,
         template,
     }
@@ -128,9 +128,9 @@ function shuffle<T>(items: T[]): T[] {
 
 const assignRandomColors = (
     paths: ReadonlyArray<TemplatePath>,
-    podge: ColorPodge,
+    palette: Palette,
 ): Tile["groupColorMap"] => {
-    const allColors = podge.driftColors.map((c) => c.key)
+    const allColors = palette.driftColors.map((c) => c.key)
     let remainingColors: number[] = []
     return Object.fromEntries(
         paths.map(({ group }) => {
@@ -146,7 +146,7 @@ export type Side = "top" | "right" | "bottom" | "left"
 export const addStripe = (
     quilt: GridOfSquares,
     side: Side,
-    colors: ColorPodge,
+    colors: Palette,
 ): GridOfSquares => {
     // start with a copy
     const tiles = [

@@ -7,7 +7,7 @@ interface DistCache {
 
 // A collection of colors in CIE space — a perceptual color space
 // — that can disperse themselves to be roughly equidistant.
-export class ColorPodge {
+export class Palette {
     static readonly HSV_DELTAS: ReadonlyArray<ThreeD> = [
         // index 1 is larger because LCh Chroma is scaled down saturation
         // and won't shift at all if we use 1 -- shifts happen in HSV space.
@@ -30,11 +30,10 @@ export class ColorPodge {
         anneal = true,
         distanceTrials: number = 1,
     ) => {
-        let result = new ColorPodge()
+        let result = new Palette()
         while (result.driftColors.length < numColors)
             result = result.addRandomColor(distanceTrials)[0]
-        if (anneal)
-            ColorPodge.ANNEAL.forEach((x) => (result = result.disperse(x)))
+        if (anneal) Palette.ANNEAL.forEach((x) => (result = result.disperse(x)))
         return result
     }
 
@@ -72,13 +71,13 @@ export class ColorPodge {
     }
 
     /**
-     * Add a random color to this podge.
+     * Add a random color to this palette.
      * @param distanceTrials add the Nth random color that is furthest from existing colors.
      */
-    addRandomColor(distanceTrials = 1): [ColorPodge, DriftColor] {
+    addRandomColor(distanceTrials = 1): [Palette, DriftColor] {
         const newColor = this.lookForDistantColor(distanceTrials)
         return [
-            new ColorPodge(
+            new Palette(
                 [...this.driftColors, newColor],
                 this.neverSettle,
                 // reset settlement tracking because a new color is in the mix
@@ -87,39 +86,39 @@ export class ColorPodge {
         ]
     }
 
-    removeColor(idx: number): ColorPodge {
+    removeColor(idx: number): Palette {
         // reset settlement tracking because a color has been removed
         const newColors = this.driftColors.toSpliced(idx, 1)
-        return new ColorPodge(newColors, this.neverSettle)
+        return new Palette(newColors, this.neverSettle)
     }
 
-    replaceColor(idx: number, color: DriftColor): ColorPodge {
+    replaceColor(idx: number, color: DriftColor): Palette {
         const newColors = [...this.driftColors]
         newColors[idx] = color
-        return new ColorPodge(newColors, this.neverSettle)
+        return new Palette(newColors, this.neverSettle)
     }
 
-    setPinned(idx: number, pinned: boolean): ColorPodge {
+    setPinned(idx: number, pinned: boolean): Palette {
         const color = this.driftColors[idx]
         if (color.isPinned === pinned) return this
         else return this.replaceColor(idx, color.setPinned(pinned))
     }
 
-    sort(comparator: (a: DriftColor, b: DriftColor) => number): ColorPodge {
-        return new ColorPodge(this.driftColors.toSorted(comparator))
+    sort(comparator: (a: DriftColor, b: DriftColor) => number): Palette {
+        return new Palette(this.driftColors.toSorted(comparator))
     }
 
     // random walk
-    drift(f: number): ColorPodge {
+    drift(f: number): Palette {
         // reset settlement tracking because colors have been shuffled
-        return new ColorPodge(
+        return new Palette(
             this.driftColors.map((color: DriftColor) => color.drift(f)),
             this.neverSettle,
         )
     }
 
     // spread colors away from each other
-    disperse(stepSize: number): ColorPodge {
+    disperse(stepSize: number): Palette {
         if (this.settled) return this
 
         // if this closestTwo score appears twice in our history, we're settled.
@@ -127,9 +126,9 @@ export class ColorPodge {
         const newSettled =
             !this.neverSettle &&
             this.dispersionHistory.filter((x) => x === c).length >=
-                ColorPodge.SETTLED_THRESHOLD
+                Palette.SETTLED_THRESHOLD
         if (newSettled)
-            return new ColorPodge(
+            return new Palette(
                 this.driftColors,
                 this.neverSettle,
                 newSettled,
@@ -141,12 +140,12 @@ export class ColorPodge {
             ...this.dispersionHistory,
             this.closestTwo(),
         ]
-        if (newDispersionHistory.length > ColorPodge.MAX_DISPERSION_HISTORY)
+        if (newDispersionHistory.length > Palette.MAX_DISPERSION_HISTORY)
             newDispersionHistory.splice(0, 1)
         const newColors = this.driftColors.map((color) =>
             this.disperseOne(color, stepSize),
         )
-        return new ColorPodge(
+        return new Palette(
             newColors,
             this.neverSettle,
             newSettled,
@@ -172,10 +171,10 @@ export class ColorPodge {
     closestFurthestTwo(): TwoD {
         if (this.closestFurtherTwoCache[0] === Infinity)
             if (this.driftColors.length <= 1)
-                ColorPodge.mutateMinMax2(this.closestFurtherTwoCache, [0, 0])
+                Palette.mutateMinMax2(this.closestFurtherTwoCache, [0, 0])
             else
                 this.driftColors.forEach((color: DriftColor) =>
-                    ColorPodge.mutateMinMax2(
+                    Palette.mutateMinMax2(
                         this.closestFurtherTwoCache,
                         this.minMaxDist(color),
                     ),
@@ -200,7 +199,7 @@ export class ColorPodge {
 
         let result = color
         let maxMinDist = this.minDist(color)
-        ColorPodge.HSV_DELTAS.forEach((delta) => {
+        Palette.HSV_DELTAS.forEach((delta) => {
             const candidate = color.shift(delta, f)
             const dist = this.minDist(candidate, color, true)
             // console.log(`${color} -- consider ${c} -- ${d}`);
@@ -212,7 +211,7 @@ export class ColorPodge {
         return result
     }
 
-    /** Distance from color to the closest member of this podge. */
+    /** Distance from color to the closest member of this palette. */
     minDist(color: DriftColor, ignore?: DriftColor, ignoreCache = false) {
         return this.minMaxDist(color, ignore, ignoreCache)[0]!
     }
@@ -224,7 +223,7 @@ export class ColorPodge {
     /* tslint:disable:member-ordering */
     private readonly minMaxDistCache: DistCache = {}
     /* tslint:enable */
-    // what are the distances to the nearest and farthest other color in this podge?
+    // what are the distances to the nearest and farthest other color in this palette?
     // if ignore is supplied, skip it in the list of colors
     minMaxDist(color: DriftColor, ignore?: DriftColor, ignoreCache = false) {
         let result = this.minMaxDistCache[color.key]
@@ -234,7 +233,7 @@ export class ColorPodge {
                 if (otherColor !== color && otherColor !== ignore) {
                     // const pd = dc.hslD2(color);
                     const pd = otherColor.perceptualD2(color)
-                    ColorPodge.mutateMinMax2(result!, [pd, pd])
+                    Palette.mutateMinMax2(result!, [pd, pd])
                 }
             })
             if (!ignoreCache) this.minMaxDistCache[color.key] = result
@@ -251,7 +250,7 @@ export class ColorPodge {
     }
 
     pickRandom(): DriftColor {
-        if (this.length === 0) throw new Error("empty podge")
+        if (this.length === 0) throw new Error("empty palette")
         return this.driftColors[
             Math.floor(Math.random() * this.driftColors.length)
         ]
