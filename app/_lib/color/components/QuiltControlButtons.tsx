@@ -29,7 +29,9 @@ export const QuiltControlButtons = () => {
         const randomColors = Palette.construct(colors.length, false, 3)
         let newPalette = colors
         randomColors.driftColors.forEach((color, idx) => {
-            newPalette = newPalette.replaceColor(idx, color, true)
+            const oldColor = colors.driftColors[idx]
+            if (!oldColor.isPinned)
+                newPalette = newPalette.replaceColor(idx, color, true)
         })
         sortColors(newPalette)
     }, [colors, sortColors])
