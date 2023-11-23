@@ -4,26 +4,16 @@ import { minMax } from "../MathFunctions"
 
 export class DriftColor {
     // allowed limits on lightness & saturation when drifting (hsluv)
-    static readonly MIN_BRIGHT = 30
+    static readonly MIN_BRIGHT = 25
     static readonly MAX_BRIGHT = 80
     static readonly SPAN_BRIGHT = DriftColor.MAX_BRIGHT - DriftColor.MIN_BRIGHT
-    static readonly RECIP_BRIGHT = 1 / DriftColor.SPAN_BRIGHT
     static readonly MID_LIGHT =
         (DriftColor.MIN_BRIGHT + DriftColor.MAX_BRIGHT) / 2
-    static readonly MIN_SAT = 60
+    static readonly MIN_SAT = 30
     static readonly MAX_SAT = 100
     static readonly SPAN_SAT = DriftColor.MAX_SAT - DriftColor.MIN_SAT
-    // static readonly MID_SAT = (DriftColor.MIN_SAT + DriftColor.MAX_SAT) / 2
 
     static readonly BLACK: DriftColor = new DriftColor(CieColor.BLACK)
-    static readonly GREY_20: DriftColor = new DriftColor(CieColor.GREY_20)
-    static readonly GREY_30: DriftColor = new DriftColor(CieColor.GREY_30)
-    static readonly GREY_40: DriftColor = new DriftColor(CieColor.GREY_40)
-    static readonly GREY_50: DriftColor = new DriftColor(CieColor.GREY_50)
-    static readonly GREY_60: DriftColor = new DriftColor(CieColor.GREY_60)
-    static readonly GREY_70: DriftColor = new DriftColor(CieColor.GREY_70)
-    static readonly GREY_80: DriftColor = new DriftColor(CieColor.GREY_80)
-    static readonly WHITE: DriftColor = new DriftColor(CieColor.WHITE)
 
     static clamp_bright(b: number): number {
         return DriftColor.clamp(b, DriftColor.MIN_BRIGHT, DriftColor.MAX_BRIGHT)
@@ -34,8 +24,10 @@ export class DriftColor {
 
     static random(): DriftColor {
         return DriftColor.constructHSL(
-            // TODO even p across CIELUV for uniform perceptual distribution
-            Math.random() * 360,
+            // bias towards blue (about 250) because it's pretty
+            Math.round(Math.random() * 250 + Math.random() * 250) % 360,
+            // Math.random() * 50 + 225,
+            // Math.random() * 360,
             Math.random() * this.SPAN_SAT + DriftColor.MIN_SAT,
             Math.random() * this.SPAN_BRIGHT + DriftColor.MIN_BRIGHT,
         )

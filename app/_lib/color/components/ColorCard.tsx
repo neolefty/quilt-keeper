@@ -4,7 +4,6 @@ import pinCircle from "../../../../public/pin-circle.svg"
 import pinnedCircle from "../../../../public/pinned-circle.svg"
 import { DriftColor } from "../DriftColor"
 import { useColors } from "../state/ColorsProvider"
-import { IconSvg } from "../../icons/IconSvg"
 import { SvgIconButton } from "./SvgIconButton"
 
 export const ColorCard = ({
@@ -21,10 +20,7 @@ export const ColorCard = ({
     )
     const randomizeColor = useCallback(() => {
         const oldColor = colors.driftColors[idx]
-        const replacement = colors.lookForDistantColor(
-            colors.length + 5,
-            // Math.max(5, 100 / colors.length),
-        )
+        const replacement = colors.lookForDistantColor(colors.length + 2)
         setColors(
             colors.replaceColor(
                 idx,
