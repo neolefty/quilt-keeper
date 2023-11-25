@@ -11,7 +11,7 @@ import { GlassSquare } from "./GlassSquare"
 import { baseLength } from "../../square/Paths"
 import { CircleButton } from "./CircleOfButtons"
 import { redistributeColors } from "../quiltFunctions"
-import { useColors } from "../../color/state/ColorsProvider"
+import { usePalette } from "../../color/state/PaletteProvider"
 import { useQuilt } from "../state/QuiltProvider"
 
 export interface ShowSingleSquareProps extends ShowSquareProps {
@@ -101,13 +101,13 @@ const RenderSingleSquare = (props: SingleSquareProps) => {
 
 const EditSquare = ({ square, setSquare }: SingleSquareProps) => {
     const buttonRadius = 0.3 * baseLength
-    const { colors } = useColors()
+    const { palette } = usePalette()
     const { setEditingSquare } = useEditSquare()
     return (
         <CircleButton
             r={buttonRadius}
             onClick={() => {
-                const newSquare = redistributeColors(square, colors)
+                const newSquare = redistributeColors(square, palette)
                 setSquare(newSquare)
                 setEditingSquare(newSquare)
             }}

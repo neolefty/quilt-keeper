@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { mapQuiltTiles } from "../../square/Square"
 import { baseLength } from "../../square/Paths"
 import { CircleOfButtons, IconCircle } from "./CircleOfButtons"
-import { useColors } from "../../color/state/ColorsProvider"
+import { usePalette } from "../../color/state/PaletteProvider"
 import { createRandomSquare } from "../quiltFunctions"
 import { SingleSquareProps } from "./SingleSquareProps"
 import { useEditSquare } from "../state/EditSquareProvider"
@@ -23,7 +23,7 @@ const useSquareActions = ({
     setSquare,
     flipCopySquare,
 }: SingleSquareProps): IconCircle => {
-    const { colors } = useColors()
+    const { palette } = usePalette()
     const { editingSquare, setEditingSquare } = useEditSquare()
     return useMemo(
         () => ({
@@ -47,7 +47,7 @@ const useSquareActions = ({
                     ),
                 flipDown: () => flipCopySquare(0, 1),
                 paintBrush: () => {
-                    setSquare(createRandomSquare(colors))
+                    setSquare(createRandomSquare(palette))
                     // setEditingSquare(editingSquare ? undefined : square),
                 },
                 flipLeft: () => flipCopySquare(-1, 0),
@@ -62,11 +62,11 @@ const useSquareActions = ({
                 // reroute: undefined,
             }),
             center: suppressAll({
-                d6: () => setSquare(createRandomSquare(colors)),
+                d6: () => setSquare(createRandomSquare(palette)),
             }),
         }),
         [
-            colors,
+            palette,
             editingSquare,
             flipCopySquare,
             setEditingSquare,

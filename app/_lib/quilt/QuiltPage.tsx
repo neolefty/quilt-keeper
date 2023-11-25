@@ -1,6 +1,6 @@
 "use client"
 
-import { ColorsProvider } from "../color/state/ColorsProvider"
+import { PaletteProvider } from "../color/state/PaletteProvider"
 import { QuiltControls } from "../color/components/QuiltControls"
 import { QuiltProvider } from "./state/QuiltProvider"
 import { ShowQuilt } from "./components/ShowQuilt"
@@ -14,7 +14,7 @@ export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
     const [title, setTitle] = useState(initialTitle)
 
     return (
-        <ColorsProvider>
+        <PaletteProvider>
             <QuiltProvider>
                 <HistoryProvider>
                     <EditSquareProvider>
@@ -30,7 +30,7 @@ export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
                     </EditSquareProvider>
                 </HistoryProvider>
             </QuiltProvider>
-        </ColorsProvider>
+        </PaletteProvider>
     )
 }
 

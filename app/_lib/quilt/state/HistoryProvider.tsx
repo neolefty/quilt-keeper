@@ -1,7 +1,7 @@
 import { Palette } from "../../color/Palette"
 import { GridOfSquares } from "../../square/Square"
 import { defaultQuiltState, useQuilt } from "./QuiltProvider"
-import { useColors } from "../../color/state/ColorsProvider"
+import { usePalette } from "../../color/state/PaletteProvider"
 import {
     createContext,
     PropsWithChildren,
@@ -13,7 +13,7 @@ import {
 } from "react"
 
 interface HistoryEntry {
-    colors: Palette
+    palette: Palette
     quilt: GridOfSquares
 }
 
@@ -51,7 +51,7 @@ const defaultHistoryContext: HistoryContextType = {
 const HistoryContext = createContext(defaultHistoryContext)
 
 export const HistoryProvider = ({ children }: PropsWithChildren<{}>) => {
-    const { colors, setColors } = useColors()
+    const { palette, setPalette } = usePalette()
     const { quilt, setQuilt } = useQuilt()
     const isUpdatingRef = useRef(false)
     const [history, setHistory] = useState(defaultHistoryState)
@@ -64,7 +64,7 @@ export const HistoryProvider = ({ children }: PropsWithChildren<{}>) => {
         //  * the quilt is uninitialized (because it will be automatically initialized with a useEffect)
         if (
             !isUpdatingRef.current &&
-            colors.length > 0 &&
+            palette.length > 0 &&
             quilt !== defaultQuiltState.quilt
         ) {
             const historyIndex = history.historyIndex + 1
@@ -76,7 +76,7 @@ export const HistoryProvider = ({ children }: PropsWithChildren<{}>) => {
                 history: [
                     ...history.history.slice(0, historyIndex),
                     {
-                        colors,
+                        palette: palette,
                         quilt,
                     },
                 ],
@@ -85,7 +85,7 @@ export const HistoryProvider = ({ children }: PropsWithChildren<{}>) => {
         } else console.debug("skipping history update increment")
         // Note: Omitting history from dependencies
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [colors, quilt])
+    }, [palette, quilt])
 
     const state = useMemo<HistoryContextType>(() => {
         const setHistoryIndex = (historyIndex: number) => {
@@ -96,7 +96,7 @@ export const HistoryProvider = ({ children }: PropsWithChildren<{}>) => {
             }
             isUpdatingRef.current = true
             try {
-                const { colors, quilt } = history.history[historyIndex]
+                const { palette, quilt } = history.history[historyIndex]
                 const newHistory = {
                     history: history.history,
                     historyIndex,
@@ -108,7 +108,7 @@ export const HistoryProvider = ({ children }: PropsWithChildren<{}>) => {
                     newHistory,
                 })
                 setHistory(newHistory)
-                setColors(colors)
+                setPalette(palette)
                 setQuilt(quilt)
             } finally {
                 // Do this after side effects fire. Dang, this is a kludge.
@@ -132,7 +132,7 @@ export const HistoryProvider = ({ children }: PropsWithChildren<{}>) => {
             maxUndo: history.historyIndex,
             maxRedo: history.history.length - history.historyIndex - 1,
         }
-    }, [setColors, setQuilt, history])
+    }, [setPalette, setQuilt, history])
 
     return (
         <HistoryContext.Provider value={state}>
