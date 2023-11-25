@@ -158,6 +158,23 @@ const Sparkle = ({ color }: InnerIconProps) => (
     </g>
 )
 
+const Undo = ({ color }: InnerIconProps) => (
+    <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        stroke="none"
+        transform={`scale(${24 / 93}) translate(-28, -57)`}
+        d="M91.015 147.348C105.73 130.408 99.981 105.925 77.392 108.542C78.292 114.107 79.167 119.496 79.499 121.484C80.284 126.197 76.351 126.887 76.351 126.887L32.597 95.9146L74.876 58.0586C74.876 58.0586 79.202 58.1616 78.417 64.5416C78.103 67.0876 77.477 72.1256 76.836 77.2626C114.204 72.4096 137.164 123.127 94.006 148.981L91.015 147.348Z"
+        fill={color}
+    />
+)
+
+const Redo = ({ color }: InnerIconProps) => (
+    <g transform="scale(-1, 1) translate(-24, 0)">
+        <Undo color={color} />
+    </g>
+)
+
 export const IconPaths = {
     d6: D6,
     paintBrush: PaintBrush,
@@ -173,4 +190,6 @@ export const IconPaths = {
     minus: Minus,
     sparkle: Sparkle,
     trash: Trash,
+    undo: Undo,
+    redo: Redo,
 }

@@ -46,8 +46,10 @@ const useSquareActions = ({
                         })),
                     ),
                 flipDown: () => flipCopySquare(0, 1),
-                paintBrush: () =>
-                    setEditingSquare(editingSquare ? undefined : square),
+                paintBrush: () => {
+                    setSquare(createRandomSquare(colors))
+                    // setEditingSquare(editingSquare ? undefined : square),
+                },
                 flipLeft: () => flipCopySquare(-1, 0),
                 rotateLeft: () =>
                     setSquare(

@@ -42,15 +42,19 @@ export const QuiltControlButtons = () => {
                 className="btn btn-accent col-span-3"
                 disabled={maxUndo === 0}
                 onClick={() => setHistoryRelative(-1)}
-                icon="rotateLeft"
+                icon="undo"
             />
             <SvgIconButton
                 title="Redo"
                 className="btn btn-accent col-span-3"
                 disabled={maxRedo === 0}
                 onClick={() => setHistoryRelative(1)}
-                icon="rotateRight"
+                icon="redo"
             />
+            <hr className="col-span-6" />
+            <h2 className="col-span-6 text-center font-bold text-xl -my-2">
+                Shapes
+            </h2>
             <SvgIconButton
                 title="Redistribute colors"
                 className="btn btn-primary col-span-3"
@@ -63,6 +67,10 @@ export const QuiltControlButtons = () => {
                 title="Randomize Quilt"
                 icon="d6"
             />
+            <hr className="col-span-6" />
+            <h2 className="col-span-6 text-center font-bold text-xl -my-2">
+                Palette
+            </h2>
             <SvgIconButton
                 title="Enhance colors"
                 className="btn btn-secondary col-span-2"
