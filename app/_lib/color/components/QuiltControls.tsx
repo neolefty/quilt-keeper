@@ -3,7 +3,7 @@ import { ColorCard } from "./ColorCard"
 import { usePalette } from "../state/PaletteProvider"
 
 export const QuiltControls = () => {
-    const { palette, setPalette, sortPalette } = usePalette()
+    const { palette } = usePalette()
     return (
         <div className="grid gap-3">
             <QuiltControlButtons />
