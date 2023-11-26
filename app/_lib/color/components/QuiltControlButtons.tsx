@@ -72,7 +72,7 @@ export const QuiltControlButtons = () => {
                 Palette
             </h2>
             <SvgIconButton
-                title="Enhance colors"
+                title="Enhance colors — increase contrast"
                 className="btn btn-secondary col-span-2"
                 onClick={disperse}
                 icon="sparkle"

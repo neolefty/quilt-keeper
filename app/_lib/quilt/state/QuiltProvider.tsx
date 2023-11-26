@@ -26,9 +26,14 @@ import { useSizeFromUrlParams } from "../../useSizeFromUrlParams"
 
 interface QuiltState {
     quilt: GridOfSquares
-    setQuilt: (quilt: Square) => void
-    redistributeColors: () => void
-    resetPattern: () => void
+    // if true, overwrite the previous state in undo history
+    clobber: boolean
+    // global state sequence (used for undo, with clobber)
+    serial: number
+
+    setQuilt: (quilt: Square, clobber?: boolean) => void
+    redistributeColors: (clobber?: boolean) => void
+    resetPattern: (clobber?: boolean) => void
 }
 
 const tni = () => {
@@ -46,8 +51,10 @@ const defaultSquare: SingleSquare = {
 
 export const defaultQuiltState: QuiltState = {
     quilt: {
-        tiles: [[defaultSquare]],
+        squares: [[defaultSquare]],
     },
+    clobber: false,
+    serial: NaN,
     setQuilt: tni,
     redistributeColors: tni,
     resetPattern: tni,
@@ -57,35 +64,64 @@ const QuiltContext = createContext<QuiltState>(defaultQuiltState)
 
 export const QuiltProvider = ({
     defaultQuiltSize,
+    // a way to put all state changes into a global sequence -- increment and include in state on each change
+    serial,
     children,
-}: PropsWithChildren<{ defaultQuiltSize?: Pair<number> }>) => {
+}: PropsWithChildren<{
+    defaultQuiltSize?: Pair<number>
+    serial: [number]
+}>) => {
     const { palette } = usePalette()
-    const [quilt, setQuilt] = useState(defaultQuiltState.quilt)
+    const [{ quilt, clobber }, setQuilt] = useState({
+        quilt: defaultQuiltState.quilt,
+        clobber: false,
+    })
     const [width, height] = useSizeFromUrlParams(defaultQuiltSize)
     useEffect(() => {
-        if (quilt === defaultQuiltState.quilt && palette.length > 0)
-            setQuilt(createRandomQuilt(width, height, palette))
+        if (quilt === defaultQuiltState.quilt && palette.length > 0) {
+            setQuilt({
+                quilt: createRandomQuilt(width, height, palette),
+                clobber: true,
+            })
+        }
     }, [width, height, palette, quilt])
-    const quiltState: QuiltState = useMemo(
+    // separate memo of static state items to avoid updating serial number when palette changes
+    const staticQuilt = useMemo(
         () => ({
             quilt,
-            setQuilt: (quilt: Square) => {
-                if (isGrid(quilt)) setQuilt(quilt)
-                else setQuilt({ tiles: [[quilt]] })
-            },
-            resetPattern: () => {
-                const [curWidth, curHeight] = quiltDimensions(quilt)
-                setQuilt(createRandomQuilt(curWidth, curHeight, palette))
-            },
-            redistributeColors: () =>
-                setQuilt(redistributeColors(quilt, palette)),
+            clobber,
+            serial: serial[0]++,
         }),
-        [palette, quilt],
+        [clobber, quilt, serial],
     )
+    const quiltState: QuiltState = useMemo(
+        () => ({
+            ...staticQuilt,
+            setQuilt: (quilt: Square, clobber = false) => {
+                if (isGrid(quilt)) setQuilt({ quilt, clobber })
+                else setQuilt({ quilt: { squares: [[quilt]] }, clobber })
+            },
+            resetPattern: (clobber = false) => {
+                const [curWidth, curHeight] = quiltDimensions(quilt)
+                setQuilt({
+                    quilt: createRandomQuilt(curWidth, curHeight, palette),
+                    clobber,
+                })
+            },
+            redistributeColors: (clobber = false) => {
+                setQuilt({
+                    quilt: redistributeColors(quilt, palette),
+                    clobber,
+                })
+            },
+        }),
+        [palette, quilt, staticQuilt],
+    )
+    // when a color is removed from the palette, re-color affected tiles
     useEffect(() => {
         if (palette.length === 0 || quilt === defaultQuiltState.quilt) return
         const square = fillInMissingColors(quilt, palette)
-        if (square !== quilt) quiltState.setQuilt(square)
+        if (square !== quilt) quiltState.setQuilt(square, true)
     }, [palette, quilt, quiltState])
     return (
         <QuiltContext.Provider value={quiltState}>

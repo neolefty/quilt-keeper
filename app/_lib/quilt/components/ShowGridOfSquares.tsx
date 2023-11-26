@@ -15,17 +15,19 @@ export const ShowGridOfSquares = ({
     const makeSetSquare = useCallback(
         (x: number, y: number) => (square: Square) => {
             // make a copy ...
-            const newTiles = [...outerSquare.tiles.map((column) => [...column])]
+            const newSquares = [
+                ...outerSquare.squares.map((column) => [...column]),
+            ]
             // ... and edit it ...
-            newTiles[x][y] = square
+            newSquares[x][y] = square
             // ... and pass it up to the parent
-            setSquare({ tiles: newTiles } as GridOfSquares) // annotate that arrays are not empty
+            setSquare({ squares: newSquares } as GridOfSquares) // annotate that arrays are not empty
         },
-        [setSquare, outerSquare.tiles],
+        [setSquare, outerSquare.squares],
     )
     return (
         <>
-            {outerSquare.tiles.map((column, x) => {
+            {outerSquare.squares.map((column, x) => {
                 const translateX = baseLength + baseLength * 2 * x
                 return (
                     <Fragment key={x}>

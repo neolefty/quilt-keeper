@@ -6,16 +6,17 @@ import { QuiltProvider } from "./state/QuiltProvider"
 import { ShowQuilt } from "./components/ShowQuilt"
 import { EditSquareProvider } from "./state/EditSquareProvider"
 import { HistoryProvider } from "./state/HistoryProvider"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { randomTitle } from "../../Titles"
 import { SvgIconButton } from "../color/components/SvgIconButton"
 
 export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
     const [title, setTitle] = useState(initialTitle)
+    const serialRef = useRef<[number]>([0])
 
     return (
-        <PaletteProvider>
-            <QuiltProvider>
+        <PaletteProvider serial={serialRef.current}>
+            <QuiltProvider serial={serialRef.current}>
                 <HistoryProvider>
                     <EditSquareProvider>
                         <div className="flex flex-row h-full">
