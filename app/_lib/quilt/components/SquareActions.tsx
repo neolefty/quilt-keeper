@@ -3,7 +3,7 @@ import { mapQuiltTiles } from "../../square/Square"
 import { baseLength } from "../../square/Paths"
 import { CircleOfButtons, IconCircle } from "./CircleOfButtons"
 import { usePalette } from "../../color/state/PaletteProvider"
-import { createRandomSquare } from "../quiltFunctions"
+import { createRandomSquare, redistributeColors } from "../quiltFunctions"
 import { SingleSquareProps } from "./SingleSquareProps"
 import { useEditSquare } from "../state/EditSquareProvider"
 import { GlassSquare } from "./GlassSquare"
@@ -47,8 +47,8 @@ const useSquareActions = ({
                     ),
                 flipDown: () => flipCopySquare(0, 1),
                 paintBrush: () => {
-                    setSquare(createRandomSquare(palette))
-                    // setEditingSquare(editingSquare ? undefined : square),
+                    setSquare(redistributeColors(square, palette))
+                    // setEditingSquare(editingSquare ? undefined : square)
                 },
                 flipLeft: () => flipCopySquare(-1, 0),
                 rotateLeft: () =>
