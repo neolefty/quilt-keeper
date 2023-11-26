@@ -1,12 +1,12 @@
 import { TemplatePath, Tile } from "../../square/Square"
-import { useColors } from "../../color/state/ColorsProvider"
+import { usePalette } from "../../color/state/PaletteProvider"
 
 const ShowPath = ({ tile, path }: { tile: Tile; path: TemplatePath }) => {
-    const { colors } = useColors()
+    const { palette } = usePalette()
     const { group, svgPath, transform } = path
     const { groupColorMap, template, rotation } = tile
     const colorId = groupColorMap[group]
-    const color = colors.byKey.get(colorId)
+    const color = palette.byKey.get(colorId)
     return <path d={svgPath} fill={color?.hexString} transform={transform} />
 }
 

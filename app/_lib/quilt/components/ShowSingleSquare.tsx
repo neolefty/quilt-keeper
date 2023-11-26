@@ -11,8 +11,7 @@ import { GlassSquare } from "./GlassSquare"
 import { baseLength } from "../../square/Paths"
 import { CircleButton } from "./CircleOfButtons"
 import { redistributeColors } from "../quiltFunctions"
-import { useColors } from "../../color/state/ColorsProvider"
-import { useQuilt } from "../state/QuiltProvider"
+import { usePalette } from "../../color/state/PaletteProvider"
 
 export interface ShowSingleSquareProps extends ShowSquareProps {
     square: SingleSquare
@@ -36,13 +35,15 @@ export const ShowSingleSquare = ({
         )
     const flipCopySquare = useCallback(
         (dx: number, dy: number) => {
-            const newTiles = [...outerSquare.tiles.map((column) => [...column])]
-            const [width, height] = [newTiles.length, newTiles[0].length]
+            const newSquares = [
+                ...outerSquare.squares.map((column) => [...column]),
+            ]
+            const [width, height] = [newSquares.length, newSquares[0].length]
             const [newX, newY] = [
                 (x + dx + width) % width,
                 (y + dy + height) % height,
             ]
-            newTiles[newX][newY] = {
+            newSquares[newX][newY] = {
                 tiles: square.tiles.map((tile) => ({
                     ...tile,
                     rotation:
@@ -55,9 +56,9 @@ export const ShowSingleSquare = ({
                     mirror: !tile.mirror,
                 })) as OneOrMore<Tile>,
             }
-            setOuterSquare({ tiles: newTiles } as GridOfSquares) // annotate that arrays are not empty
+            setOuterSquare({ squares: newSquares } as GridOfSquares) // annotate that arrays are not empty
         },
-        [outerSquare.tiles, setOuterSquare, square.tiles, x, y],
+        [outerSquare.squares, setOuterSquare, square.tiles, x, y],
     )
     return (
         <RenderSingleSquare
@@ -101,13 +102,13 @@ const RenderSingleSquare = (props: SingleSquareProps) => {
 
 const EditSquare = ({ square, setSquare }: SingleSquareProps) => {
     const buttonRadius = 0.3 * baseLength
-    const { colors } = useColors()
+    const { palette } = usePalette()
     const { setEditingSquare } = useEditSquare()
     return (
         <CircleButton
             r={buttonRadius}
             onClick={() => {
-                const newSquare = redistributeColors(square, colors)
+                const newSquare = redistributeColors(square, palette)
                 setSquare(newSquare)
                 setEditingSquare(newSquare)
             }}

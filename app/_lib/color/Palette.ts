@@ -1,8 +1,15 @@
-import { DriftColor } from "./DriftColor"
+import { DriftColor, DriftColorJS } from "./DriftColor"
 import { ThreeD, TwoD } from "../FixedLengthArrays"
 
 interface DistCache {
     [key: number]: TwoD
+}
+
+export interface PaletteJS {
+    driftColors: ReadonlyArray<DriftColorJS>
+    neverSettle: boolean
+    settled: boolean
+    dispersionHistory: ReadonlyArray<number>
 }
 
 // A collection of colors in CIE space — a perceptual color space
@@ -37,6 +44,17 @@ export class Palette {
         return result
     }
 
+    static fromJS = (js: PaletteJS) => {
+        return new Palette(
+            js.driftColors.map((dc) => DriftColor.fromJS(dc)),
+            js.neverSettle,
+            js.settled,
+            js.dispersionHistory,
+        )
+    }
+
+    readonly byKey: Map<number, DriftColor>
+
     constructor(
         readonly driftColors: ReadonlyArray<DriftColor> = [],
         readonly neverSettle: boolean = true,
@@ -44,8 +62,9 @@ export class Palette {
         readonly settled: boolean = false, // has dispersion settled down?
         // history of the last few closestTwo score
         readonly dispersionHistory: ReadonlyArray<number> = [],
-        readonly byKey = new Map(driftColors.map((dc) => [dc.key, dc])),
-    ) {}
+    ) {
+        this.byKey = new Map(driftColors.map((dc) => [dc.key, dc]))
+    }
 
     get length() {
         return this.driftColors.length

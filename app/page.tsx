@@ -1,7 +1,5 @@
 import { QuiltPage } from "./_lib/quilt/QuiltPage"
-import { randomTitle } from "./Titles"
-
-const initialTitle = randomTitle()
+import { initialTitle, randomTitle } from "./Titles"
 
 export default function Home() {
     return (

@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { randomTitle } from "./Titles"
+import { initialTitle, randomTitle } from "./Titles"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-    title: randomTitle(),
+    title: initialTitle,
     description: "Design a quilt!",
 }
 

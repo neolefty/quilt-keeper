@@ -19,12 +19,12 @@ type GridOrSingle<T extends Square> = T extends GridOfSquares
 /** Assign random colors to all tiles in a quilt. */
 export const redistributeColors = <T extends Square>(
     square: T,
-    colors: Palette,
+    palette: Palette,
 ): GridOrSingle<T> => {
     if (isGrid(square)) {
         return {
-            tiles: square.tiles.map((column) =>
-                column.map((square) => redistributeColors(square, colors)),
+            squares: square.squares.map((column) =>
+                column.map((square) => redistributeColors(square, palette)),
             ),
         } as GridOrSingle<T> // cast to reassure about non-empty arrays and due to limitations of TypeScript
         // See https://stackoverflow.com/questions/70553130/typescript-generic-conditional-type-as-return-value-for-generic-function
@@ -38,7 +38,7 @@ export const redistributeColors = <T extends Square>(
                     ...square.tiles[0],
                     groupColorMap: assignRandomColors(
                         square.tiles[0].template.paths,
-                        colors,
+                        palette,
                     ),
                 },
             ],
@@ -63,12 +63,12 @@ function randomValue<T>(items: Record<string, T>): T {
  */
 export const fillInMissingColors = (
     square: Square,
-    colors: Palette,
+    palette: Palette,
 ): Square => {
     let changed = false
     const result = mapQuiltTiles(square, (tile) => {
         const missing = Object.values(tile.groupColorMap).some(
-            (key) => colors.byKey.get(key) === undefined,
+            (key) => palette.byKey.get(key) === undefined,
         )
         if (missing) {
             changed = true
@@ -77,7 +77,7 @@ export const fillInMissingColors = (
                 groupColorMap: Object.fromEntries(
                     Object.entries(tile.groupColorMap).map(([group, key]) => [
                         group,
-                        colors.byKey.get(key) ? key : colors.pickRandom().key,
+                        palette.byKey.get(key) ? key : palette.pickRandom().key,
                     ]),
                 ),
             }
@@ -89,7 +89,7 @@ export const fillInMissingColors = (
 export const createRandomQuilt = (
     width: number,
     height: number,
-    colors: Palette,
+    palette: Palette,
 ): GridOfSquares => {
     if (width < 1 || height < 1)
         throw new Error(
@@ -97,11 +97,11 @@ export const createRandomQuilt = (
         )
     // TypeScript doesn't quite figure out that the arrays are guaranteed to be non-zero-length,
     // but we can at least rely on it to ensure it's an array of arrays of Squares.
-    const tiles: Square[][] = numberRange(width).map(() =>
-        numberRange(height).map(() => createRandomSquare(colors)),
+    const squares: Square[][] = numberRange(width).map(() =>
+        numberRange(height).map(() => createRandomSquare(palette)),
     )
     // annotate as non-zero length
-    return { tiles } as GridOfSquares
+    return { squares } as GridOfSquares
 }
 export const createRandomSquare = (palette: Palette): SingleSquare => {
     const template = randomValue(templates)
@@ -146,28 +146,30 @@ export type Side = "top" | "right" | "bottom" | "left"
 export const addStripe = (
     quilt: GridOfSquares,
     side: Side,
-    colors: Palette,
+    palette: Palette,
 ): GridOfSquares => {
     // start with a copy
-    const tiles = [
-        ...quilt.tiles.map((column) => [...column]),
-    ] as GridOfSquares["tiles"]
+    const squares = [
+        ...quilt.squares.map((column) => [...column]),
+    ] as GridOfSquares["squares"]
 
     // create a stripe of random squares
-    const width = quilt.tiles.length
-    const height = quilt.tiles[0].length
+    const width = quilt.squares.length
+    const height = quilt.squares[0].length
     const newStripe = numberRange(
         0,
         side === "top" || side === "bottom" ? width : height,
-    ).map(() => createRandomSquare(colors)) as OneOrMore<Square>
+    ).map(() => createRandomSquare(palette)) as OneOrMore<Square>
 
     // add it to the right part of the quilt
-    if (side === "left") tiles.unshift(newStripe)
-    if (side === "right") tiles.push(newStripe)
-    if (side === "top") tiles.forEach((row, idx) => row.unshift(newStripe[idx]))
-    if (side === "bottom") tiles.forEach((row, idx) => row.push(newStripe[idx]))
+    if (side === "left") squares.unshift(newStripe)
+    if (side === "right") squares.push(newStripe)
+    if (side === "top")
+        squares.forEach((row, idx) => row.unshift(newStripe[idx]))
+    if (side === "bottom")
+        squares.forEach((row, idx) => row.push(newStripe[idx]))
 
-    return { tiles } as GridOfSquares
+    return { squares } as GridOfSquares
 }
 
 export const removeStripe = (
@@ -175,21 +177,21 @@ export const removeStripe = (
     side: Side,
 ): GridOfSquares => {
     // start with a copy
-    const tiles = [
-        ...quilt.tiles.map((column) => [...column]),
-    ] as GridOfSquares["tiles"]
+    const squares = [
+        ...quilt.squares.map((column) => [...column]),
+    ] as GridOfSquares["squares"]
 
     // remove the stripe
-    if (side === "left") tiles.shift()
-    if (side === "right") tiles.pop()
-    if (side === "top") tiles.forEach((row) => row.shift())
-    if (side === "bottom") tiles.forEach((row) => row.pop())
+    if (side === "left") squares.shift()
+    if (side === "right") squares.pop()
+    if (side === "top") squares.forEach((row) => row.shift())
+    if (side === "bottom") squares.forEach((row) => row.pop())
 
-    return { tiles } as GridOfSquares
+    return { squares } as GridOfSquares
 }
 
 export const quiltDimensions = (quilt: Square) =>
-    isGrid(quilt) ? [quilt.tiles.length, quilt.tiles[0].length] : [1, 1]
+    isGrid(quilt) ? [quilt.squares.length, quilt.squares[0].length] : [1, 1]
 
 /**
  * Add a new color to random tiles in a quilt.

@@ -1,5 +1,5 @@
 import { useQuilt } from "../state/QuiltProvider"
-import { useColors } from "../../color/state/ColorsProvider"
+import { usePalette } from "../../color/state/PaletteProvider"
 import { useCallback } from "react"
 import { isGrid } from "../../square/Square"
 import {
@@ -107,13 +107,13 @@ const QuiltMarginBar = ({
 }) => {
     const { quilt, setQuilt } = useQuilt()
     const [w, h] = quiltDimensions(quilt)
-    const { colors } = useColors()
+    const { palette } = usePalette()
     const isHorizontal = horizontal[side]
     const canRemove = isHorizontal ? h > 1 : w > 1
     const add = useCallback(() => {
         if (!isGrid(quilt)) return
-        setQuilt(addStripe(quilt, side, colors))
-    }, [colors, quilt, setQuilt, side])
+        setQuilt(addStripe(quilt, side, palette))
+    }, [palette, quilt, setQuilt, side])
     const remove = useCallback(() => {
         if (!isGrid(quilt)) return
         setQuilt(removeStripe(quilt, side))

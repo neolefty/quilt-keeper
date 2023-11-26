@@ -1,13 +1,13 @@
 import { QuiltControlButtons } from "./QuiltControlButtons"
 import { ColorCard } from "./ColorCard"
-import { useColors } from "../state/ColorsProvider"
+import { usePalette } from "../state/PaletteProvider"
 
 export const QuiltControls = () => {
-    const { colors, setColors, sortColors } = useColors()
+    const { palette } = usePalette()
     return (
         <div className="grid gap-3">
             <QuiltControlButtons />
-            {colors.driftColors.map((color, idx) => (
+            {palette.driftColors.map((color, idx) => (
                 <ColorCard color={color} idx={idx} key={idx} />
             ))}
         </div>

@@ -2,6 +2,12 @@ import { CieColor } from "./CieColor"
 import { ThreeD } from "../FixedLengthArrays"
 import { minMax } from "../MathFunctions"
 
+export interface DriftColorJS {
+    hsl: ThreeD
+    key: number
+    isPinned: boolean
+}
+
 export class DriftColor {
     // allowed limits on lightness & saturation when drifting (hsluv)
     static readonly MIN_BRIGHT = 25
@@ -41,6 +47,11 @@ export class DriftColor {
         return new DriftColor(new CieColor([h, s, l]), Math.random())
     }
 
+    /** Serialize from plain JS object. Counterpart of toJs(). */
+    static fromJS(js: DriftColorJS) {
+        return new DriftColor(new CieColor(js.hsl), js.key, js.isPinned)
+    }
+
     constructor(
         readonly cie: CieColor,
         /** A locally unique ID that follows this color as it drifts. */
@@ -48,6 +59,15 @@ export class DriftColor {
         /** Should this color drift with the others (false) or stay where it is and let the others drift around it (true)? */
         readonly isPinned: boolean = false,
     ) {}
+
+    /** Serialize to plain JS object. Counterpart of fromJS(). */
+    toJs(): DriftColorJS {
+        return {
+            hsl: this.cie.hsl,
+            key: this.key,
+            isPinned: this.isPinned,
+        }
+    }
 
     /** Using the CIE perceptual color space, create a new color with randomly shifted hue, saturation, and lightness but the same key. */
     drift(f: number) {

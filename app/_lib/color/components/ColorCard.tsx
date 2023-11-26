@@ -3,7 +3,7 @@ import Image from "next/image"
 import pinCircle from "../../../../public/pin-circle.svg"
 import pinnedCircle from "../../../../public/pinned-circle.svg"
 import { DriftColor } from "../DriftColor"
-import { useColors } from "../state/ColorsProvider"
+import { usePalette } from "../state/PaletteProvider"
 import { SvgIconButton } from "./SvgIconButton"
 
 export const ColorCard = ({
@@ -13,20 +13,20 @@ export const ColorCard = ({
     color: DriftColor
     idx: number
 }) => {
-    const { colors, setColors } = useColors()
+    const { palette, setPalette } = usePalette()
     const handleTogglePinned = useCallback(
-        () => setColors(colors.setPinned(idx, !color.isPinned)),
-        [color, idx, colors, setColors],
+        () => setPalette(palette.setPinned(idx, !color.isPinned)),
+        [color, idx, palette, setPalette],
     )
     const randomizeColor = useCallback(() => {
-        setColors(
-            colors.replaceColor(
+        setPalette(
+            palette.replaceColor(
                 idx,
-                colors.lookForDistantColor(colors.length + 2),
+                palette.lookForDistantColor(palette.length + 2),
                 true,
             ),
         )
-    }, [colors, idx, setColors])
+    }, [palette, idx, setPalette])
     return (
         <div
             className="card shadow-xl text-center flex flex-row items-center justify-center pl-2 pr-1"
@@ -55,7 +55,7 @@ export const ColorCard = ({
             <SvgIconButton
                 title="Delete this color"
                 className="btn btn-ghost px-1"
-                onClick={() => setColors(colors.removeColor(idx))}
+                onClick={() => setPalette(palette.removeColor(idx))}
                 icon="trash"
             />
         </div>

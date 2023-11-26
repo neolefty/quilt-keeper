@@ -7,7 +7,7 @@ export interface SingleSquare {
 
 /** A quilt square that is recursively a grid of squares. */
 export interface GridOfSquares {
-    tiles: OneByOneOrMore<Square>
+    squares: OneByOneOrMore<Square>
 }
 
 /**
@@ -21,7 +21,10 @@ export type Square = SingleSquare | GridOfSquares
 
 /** Is it squares all the way down? */
 export const isGrid = (square: Square): square is GridOfSquares =>
-    Array.isArray(square.tiles[0])
+    "squares" in square
+
+export const isSingleSquare = (square: Square): square is SingleSquare =>
+    "tiles" in square
 
 export interface Tile {
     // map of group to DriftColor ID
@@ -51,9 +54,9 @@ export const mapQuiltTiles = (
 ): Square => {
     if (isGrid(quilt)) {
         return {
-            tiles: quilt.tiles.map((row) =>
+            squares: quilt.squares.map((row) =>
                 row.map((column) => mapQuiltTiles(column, callback)),
-            ) as GridOfSquares["tiles"], // annotate that arrays are non-empty
+            ) as GridOfSquares["squares"], // annotate that arrays are non-empty
         }
     } else
         return {
