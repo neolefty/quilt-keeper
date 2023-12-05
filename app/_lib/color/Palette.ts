@@ -1,16 +1,25 @@
-import { DriftColor, DriftColorJS } from "./DriftColor"
+import { DriftColor, DriftColorJsSchema } from "./DriftColor"
 import { ThreeD, TwoD } from "../FixedLengthArrays"
+import { Static, Type } from "@sinclair/typebox"
 
 interface DistCache {
     [key: number]: TwoD
 }
 
-export interface PaletteJS {
-    driftColors: ReadonlyArray<DriftColorJS>
-    neverSettle: boolean
-    settled: boolean
-    dispersionHistory: ReadonlyArray<number>
-}
+export const PaletteJsSchema = Type.Object({
+    driftColors: Type.Array(DriftColorJsSchema),
+    neverSettle: Type.Boolean(),
+    settled: Type.Boolean(),
+    dispersionHistory: Type.Array(Type.Number()),
+})
+export type PaletteJS = Static<typeof PaletteJsSchema>
+
+// export interface PaletteJS {
+//     driftColors: ReadonlyArray<DriftColorJS>
+//     neverSettle: boolean
+//     settled: boolean
+//     dispersionHistory: ReadonlyArray<number>
+// }
 
 // A collection of colors in CIE space — a perceptual color space
 // — that can disperse themselves to be roughly equidistant.
@@ -44,7 +53,7 @@ export class Palette {
         return result
     }
 
-    static fromJS = (js: PaletteJS) => {
+    static fromJs = (js: PaletteJS) => {
         return new Palette(
             js.driftColors.map((dc) => DriftColor.fromJS(dc)),
             js.neverSettle,
@@ -64,6 +73,15 @@ export class Palette {
         readonly dispersionHistory: ReadonlyArray<number> = [],
     ) {
         this.byKey = new Map(driftColors.map((dc) => [dc.key, dc]))
+    }
+
+    toJs(): PaletteJS {
+        return {
+            driftColors: this.driftColors.map((dc) => dc.toJs()),
+            neverSettle: this.neverSettle,
+            settled: this.settled,
+            dispersionHistory: [...this.dispersionHistory],
+        }
     }
 
     get length() {

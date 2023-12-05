@@ -1,7 +1,5 @@
-import { Palette } from "../../color/Palette"
-import { GridOfSquares } from "../../square/Square"
-import { defaultQuiltState, useQuilt } from "./QuiltProvider"
-import { usePalette } from "../../color/state/PaletteProvider"
+import { Palette } from "../color/Palette"
+import { GridOfSquares } from "../square/Square"
 import {
     createContext,
     PropsWithChildren,
@@ -11,6 +9,8 @@ import {
     useRef,
     useState,
 } from "react"
+import { usePalette } from "../color/state/PaletteProvider"
+import { defaultQuiltState, useQuilt } from "../quilt/state/QuiltProvider"
 
 interface HistoryEntry {
     palette: Palette

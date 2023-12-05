@@ -159,7 +159,7 @@ export const addStripe = (
     const newStripe = numberRange(
         0,
         side === "top" || side === "bottom" ? width : height,
-    ).map(() => createRandomSquare(palette)) as OneOrMore<Square>
+    ).map(() => createRandomSquare(palette))
 
     // add it to the right part of the quilt
     if (side === "left") squares.unshift(newStripe)

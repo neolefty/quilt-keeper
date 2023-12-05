@@ -1,12 +1,20 @@
 import { CieColor } from "./CieColor"
 import { ThreeD } from "../FixedLengthArrays"
 import { minMax } from "../MathFunctions"
+import { Static, Type } from "@sinclair/typebox"
 
-export interface DriftColorJS {
-    hsl: ThreeD
-    key: number
-    isPinned: boolean
-}
+export const DriftColorJsSchema = Type.Object({
+    hsl: Type.Tuple([Type.Number(), Type.Number(), Type.Number()]),
+    key: Type.Number(),
+    isPinned: Type.Boolean(),
+})
+export type DriftColorJS = Static<typeof DriftColorJsSchema>
+
+// export interface DriftColorJS {
+//     hsl: ThreeD
+//     key: number
+//     isPinned: boolean
+// }
 
 export class DriftColor {
     // allowed limits on lightness & saturation when drifting (hsluv)

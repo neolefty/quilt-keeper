@@ -2,12 +2,14 @@ import { usePalette } from "../state/PaletteProvider"
 import { useCallback } from "react"
 import { useQuilt } from "../../quilt/state/QuiltProvider"
 import { stirInNewColor } from "../../quilt/quiltFunctions"
-import { useHistory } from "../../quilt/state/HistoryProvider"
 import { SvgIconButton } from "./SvgIconButton"
 import { Palette } from "../Palette"
+import { useHistory } from "../../history/HistoryProvider"
+import { useSaves } from "../../history/SaveProvider"
 
 export const QuiltControlButtons = () => {
     const { palette, sortPalette } = usePalette()
+    const { save } = useSaves()
     const { redistributeColors, resetPattern, quilt, setQuilt } = useQuilt()
     const { setHistoryRelative, maxRedo, maxUndo } = useHistory()
     const disperse = useCallback(() => {
@@ -40,8 +42,7 @@ export const QuiltControlButtons = () => {
             <SvgIconButton
                 title="Save"
                 className="btn btn-accent col-span-2"
-                disabled={maxUndo === 0}
-                onClick={() => setHistoryRelative(-1)}
+                onClick={save}
                 icon="save"
             />
             <SvgIconButton

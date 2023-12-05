@@ -56,7 +56,7 @@ export const ShowSingleSquare = ({
                     mirror: !tile.mirror,
                 })) as OneOrMore<Tile>,
             }
-            setOuterSquare({ squares: newSquares } as GridOfSquares) // annotate that arrays are not empty
+            setOuterSquare({ squares: newSquares }) // annotate that arrays are not empty
         },
         [outerSquare.squares, setOuterSquare, square.tiles, x, y],
     )
