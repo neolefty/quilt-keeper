@@ -13,6 +13,7 @@ import { Static, Type } from "@sinclair/typebox"
 import { usePalette } from "../color/state/PaletteProvider"
 import { useQuilt } from "../quilt/state/QuiltProvider"
 
+// Another possible library: typescript-json: https://dev.to/samchon/i-made-10x-faster-jsonstringify-functions-even-type-safe-2eme
 export const SaveRecordSchema = Type.Object({
     palette: PaletteJsSchema,
     quilt: GridOfSquaresSchema,
