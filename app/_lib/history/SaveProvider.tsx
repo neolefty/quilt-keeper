@@ -1,3 +1,4 @@
+import stringify from "fast-json-stable-stringify"
 import { GridOfSquaresSchema } from "../square/Square"
 import { PaletteJsSchema } from "../color/Palette"
 import {
@@ -77,18 +78,32 @@ export const SaveProvider = ({ children }: PropsWithChildren) => {
                 }
                 try {
                     savingRef.current = true
-                    // TODO debounce (don't save if no changes)
-                    const newSaves = [
-                        {
-                            palette: palette.toJs(),
-                            quilt,
-                            version: 1,
-                            timestamp: Date.now(),
-                        },
-                        ...saves,
-                    ]
-                    localStorage.setItem("saves", JSON.stringify(newSaves))
-                    setSaves(newSaves)
+                    const newRecord: RestoreRecord = {
+                        palette: palette.toJs(),
+                        quilt,
+                        version: 1,
+                        timestamp: Date.now(),
+                    }
+                    const prevRecord = saves[0]
+                    if (prevRecord) {
+                        const prevRecordCompare = {
+                            ...prevRecord,
+                            timestamp: newRecord.timestamp,
+                        }
+                        if (
+                            stringify(prevRecordCompare) ===
+                            stringify(newRecord)
+                        ) {
+                            console.debug("not saving duplicate record", {
+                                prevRecord,
+                                newRecord,
+                            })
+                        } else {
+                            const newSaves = [newRecord, ...saves]
+                            localStorage.setItem("saves", stringify(newSaves))
+                            setSaves(newSaves)
+                        }
+                    }
                 } finally {
                     savingRef.current = false
                 }
@@ -119,7 +134,9 @@ const loadSavesFromLocalStorage = (): ReadonlyArray<RestoreRecord> => {
         console.error("localStorage value 'saves' is not an array", { saves })
         return []
     }
-    return JSON.parse(saves)
+    const result = JSON.parse(saves)
+    console.log("loaded saves", { saves, result })
+    return result
 }
 
 export const useSaves = () => useContext(SaveContext)

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@mantine/hooks": "^7.3.0",
+    "@sinclair/typebox": "^0.31.28",
     "clsx": "^2.0.0",
     "fast-json-stable-stringify": "^2.1.0",
     "hsluv": "^1.0.1",
