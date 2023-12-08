@@ -9,7 +9,7 @@ import { HistoryProvider } from "../history/HistoryProvider"
 import { useEffect, useRef, useState } from "react"
 import { randomTitle } from "../../Titles"
 import { SvgIconButton } from "../color/components/SvgIconButton"
-import { SaveProvider } from "../history/SaveProvider"
+import { SaveProvider, useSaves } from "../history/SaveProvider"
 
 export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
     const [title, setTitle] = useState(initialTitle)
@@ -25,6 +25,7 @@ export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
                                 <div className="bg-base-200 px-3 h-full min-w-fit flex flex-col gap-3">
                                     <AppTitle initialTitle={title} />
                                     <QuiltControls />
+                                    <RestorePanel />
                                 </div>
                                 <div className="bg-base-100 w-full h-full">
                                     <ShowQuilt />
@@ -58,5 +59,22 @@ const AppTitle = ({ initialTitle }: { initialTitle: string }) => {
                 color="#888"
             />
         </h1>
+    )
+}
+
+const RestorePanel = () => {
+    const { saves, restore } = useSaves()
+    return (
+        <div className="grid grid-cols-6 gap-3">
+            {saves.map((save, idx) => (
+                <button
+                    className="btn btn-primary"
+                    onClick={() => restore(save.timestamp)}
+                    key={idx}
+                >
+                    {idx}
+                </button>
+            ))}
+        </div>
     )
 }

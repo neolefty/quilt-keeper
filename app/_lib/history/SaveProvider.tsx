@@ -1,6 +1,6 @@
 import stringify from "fast-json-stable-stringify"
 import { GridOfSquaresSchema } from "../square/Square"
-import { PaletteJsSchema } from "../color/Palette"
+import { Palette, PaletteJsSchema } from "../color/Palette"
 import {
     createContext,
     PropsWithChildren,
@@ -11,6 +11,7 @@ import {
     useState,
 } from "react"
 import { Static, Type } from "@sinclair/typebox"
+import { Value } from "@sinclair/typebox/value"
 import { usePalette } from "../color/state/PaletteProvider"
 import { useQuilt } from "../quilt/state/QuiltProvider"
 
@@ -19,6 +20,7 @@ export const SaveRecordSchema = Type.Object({
     palette: PaletteJsSchema,
     quilt: GridOfSquaresSchema,
     version: Type.Number(),
+    timestamp: Type.Number(),
 })
 /**
  * A record of a quilt design, as a plain JS object that can be serialized
@@ -29,15 +31,17 @@ export type SaveRecord = Static<typeof SaveRecordSchema>
 //     palette: PaletteJS
 //     quilt: GridOfSquares
 //     version: number
+//     timestamp: number
 // }
 
-interface RestoreRecord extends SaveRecord {
-    timestamp: number
-}
+// The state saved in localStorage["saves"]
+const FullSaveSchema = Type.Array(SaveRecordSchema)
+
+type FullSave = Static<typeof FullSaveSchema>
 
 interface SaveContextState {
     // All known saves, most recent first
-    saves: ReadonlyArray<RestoreRecord>
+    saves: ReadonlyArray<SaveRecord>
     // save the current state of the app
     save: () => void
     // reopen the saved state with the given timestamp
@@ -59,13 +63,15 @@ const SaveContext = createContext<SaveContextState>(defaultSaveState)
 export const SaveProvider = ({ children }: PropsWithChildren) => {
     const { palette, setPalette } = usePalette()
     const { quilt, setQuilt } = useQuilt()
-    const [saves, setSaves] = useState<ReadonlyArray<RestoreRecord>>([])
+    const [saves, setSaves] = useState<FullSave>([])
     const savingRef = useRef(false)
     useEffect(() => {
         const listener = () => {
             if (!savingRef.current) setSaves(loadSavesFromLocalStorage())
         }
         window.addEventListener("storage", listener)
+        // initial load
+        setSaves(loadSavesFromLocalStorage())
         return () => window.removeEventListener("storage", listener)
     }, [])
     const saveState = useMemo<SaveContextState>(
@@ -78,13 +84,14 @@ export const SaveProvider = ({ children }: PropsWithChildren) => {
                 }
                 try {
                     savingRef.current = true
-                    const newRecord: RestoreRecord = {
+                    const newRecord: SaveRecord = {
                         palette: palette.toJs(),
                         quilt,
                         version: 1,
                         timestamp: Date.now(),
                     }
                     const prevRecord = saves[0]
+                    let isDuplicate = false
                     if (prevRecord) {
                         const prevRecordCompare = {
                             ...prevRecord,
@@ -98,11 +105,13 @@ export const SaveProvider = ({ children }: PropsWithChildren) => {
                                 prevRecord,
                                 newRecord,
                             })
-                        } else {
-                            const newSaves = [newRecord, ...saves]
-                            localStorage.setItem("saves", stringify(newSaves))
-                            setSaves(newSaves)
+                            isDuplicate = true
                         }
+                    }
+                    if (!isDuplicate) {
+                        const newSaves = [newRecord, ...saves]
+                        localStorage.setItem("saves", stringify(newSaves))
+                        setSaves(newSaves)
                     }
                 } finally {
                     savingRef.current = false
@@ -113,7 +122,7 @@ export const SaveProvider = ({ children }: PropsWithChildren) => {
                     (save) => save.timestamp === timestamp,
                 )
                 if (!record) throw new Error("no such save")
-                setPalette(PaletteJsSchema.parse(record.palette))
+                setPalette(Palette.fromJs(record.palette))
                 setQuilt(record.quilt)
             },
         }),
@@ -126,17 +135,18 @@ export const SaveProvider = ({ children }: PropsWithChildren) => {
     )
 }
 
-const loadSavesFromLocalStorage = (): ReadonlyArray<RestoreRecord> => {
+const loadSavesFromLocalStorage = (): FullSave => {
     const saves = localStorage.getItem("saves")
     if (!saves) return []
-    const array = JSON.parse(saves)
-    if (!Array.isArray(array)) {
-        console.error("localStorage value 'saves' is not an array", { saves })
+    try {
+        const result = JSON.parse(saves)
+        if (Value.Check(FullSaveSchema, result)) return result
+        console.log("loaded saves", { saves, result })
+        return result
+    } catch (e) {
+        console.warn("failed to load saves", { saves, e })
         return []
     }
-    const result = JSON.parse(saves)
-    console.log("loaded saves", { saves, result })
-    return result
 }
 
 export const useSaves = () => useContext(SaveContext)
