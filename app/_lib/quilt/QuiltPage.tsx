@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react"
 import { randomTitle } from "../../Titles"
 import { SvgIconButton } from "../color/components/SvgIconButton"
 import { SaveProvider, useSaves } from "../history/SaveProvider"
+import { SidePanelH2 } from "../SidePanelH2"
 
 export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
     const [title, setTitle] = useState(initialTitle)
@@ -65,16 +66,20 @@ const AppTitle = ({ initialTitle }: { initialTitle: string }) => {
 const RestorePanel = () => {
     const { saves, restore } = useSaves()
     return (
-        <div className="grid grid-cols-6 gap-3">
-            {saves.map((save, idx) => (
-                <button
-                    className="btn btn-primary"
-                    onClick={() => restore(save.timestamp)}
-                    key={idx}
-                >
-                    {idx}
-                </button>
-            ))}
-        </div>
+        <>
+            <hr />
+            <SidePanelH2>Saves</SidePanelH2>
+            <div className="grid grid-cols-4 gap-3">
+                {saves.map((save, idx) => (
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => restore(save.timestamp)}
+                        key={idx}
+                    >
+                        {idx}
+                    </button>
+                ))}
+            </div>
+        </>
     )
 }

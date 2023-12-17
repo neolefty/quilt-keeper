@@ -6,6 +6,7 @@ import { SvgIconButton } from "./SvgIconButton"
 import { Palette } from "../Palette"
 import { useHistory } from "../../history/HistoryProvider"
 import { useSaves } from "../../history/SaveProvider"
+import { SidePanelH2 } from "../../SidePanelH2"
 
 export const QuiltControlButtons = () => {
     const { palette, sortPalette } = usePalette()
@@ -60,9 +61,7 @@ export const QuiltControlButtons = () => {
                 icon="redo"
             />
             <hr className="col-span-6" />
-            <h2 className="col-span-6 text-center font-bold text-xl -my-2">
-                Shapes
-            </h2>
+            <SidePanelH2 className="col-span-6">Shapes</SidePanelH2>
             <SvgIconButton
                 title="Redistribute colors"
                 className="btn btn-primary col-span-3"
@@ -76,9 +75,7 @@ export const QuiltControlButtons = () => {
                 icon="d6"
             />
             <hr className="col-span-6" />
-            <h2 className="col-span-6 text-center font-bold text-xl -my-2">
-                Palette
-            </h2>
+            <SidePanelH2 className="col-span-6">Palette</SidePanelH2>
             <SvgIconButton
                 title="Enhance colors — increase contrast"
                 className="btn btn-secondary col-span-2"
