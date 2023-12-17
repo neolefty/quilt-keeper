@@ -4,11 +4,11 @@ import { baseLength } from "../../square/Paths"
 import { CircleOfButtons, IconCircle } from "./CircleOfButtons"
 import { usePalette } from "../../color/state/PaletteProvider"
 import { createRandomSquare, redistributeColors } from "../quiltFunctions"
-import { SingleSquareProps } from "./SingleSquareProps"
+import { EditSingleSquareProps } from "./SingleSquareProps"
 import { useEditSquare } from "../state/EditSquareProvider"
 import { GlassSquare } from "./GlassSquare"
 
-export const SquareActions = (props: SingleSquareProps) => {
+export const SquareActions = (props: EditSingleSquareProps) => {
     const icons = useSquareActions(props)
     return (
         <g>
@@ -22,7 +22,7 @@ const useSquareActions = ({
     square,
     setSquare,
     flipCopySquare,
-}: SingleSquareProps): IconCircle => {
+}: EditSingleSquareProps): IconCircle => {
     const { palette } = usePalette()
     const { editingSquare, setEditingSquare } = useEditSquare()
     return useMemo(

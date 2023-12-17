@@ -8,23 +8,26 @@ export const ShowGridOfSquares = ({
     setSquare,
 }: {
     square: GridOfSquares
-    setSquare: (square: Square) => void
+    setSquare?: (square: Square) => void
 }) => {
     // Function to build setSquare functions for each sub-quilt that
     // recursively (anti-recursively?) call setSquare provided by the parent.
     const makeSetSquare = useCallback(
-        (x: number, y: number) => (square: Square) => {
-            // make a copy ...
-            const newSquares: GridOfSquares["squares"] = [
-                ...outerSquare.squares.map((column) => [...column]),
-            ]
-            // ... and edit it ...
-            const column: Square[] = newSquares[x]
-            column[y] = square
-            // newSquares[x][y] = square // bothers TS
-            // ... and pass it up to the parent
-            setSquare({ squares: newSquares }) // annotate that arrays are not empty
-        },
+        (x: number, y: number) =>
+            setSquare === undefined
+                ? undefined
+                : (square: Square) => {
+                      // make a copy ...
+                      const newSquares: GridOfSquares["squares"] = [
+                          ...outerSquare.squares.map((column) => [...column]),
+                      ]
+                      // ... and edit it ...
+                      const column: Square[] = newSquares[x]
+                      column[y] = square
+                      // newSquares[x][y] = square // bothers TS
+                      // ... and pass it up to the parent
+                      setSquare({ squares: newSquares }) // annotate that arrays are not empty
+                  },
         [setSquare, outerSquare.squares],
     )
     return (

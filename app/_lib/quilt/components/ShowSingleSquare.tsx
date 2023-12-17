@@ -1,8 +1,12 @@
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { OneOrMore } from "../../FixedLengthArrays"
-import { GridOfSquares, SingleSquare, Tile } from "../../square/Square"
+import { SingleSquare, Tile } from "../../square/Square"
 import { ShowSquareProps } from "./ShowSquare"
-import { SingleSquareProps } from "./SingleSquareProps"
+import {
+    EditSingleSquareProps,
+    isEditSingleSquareProps,
+    SingleSquareProps,
+} from "./SingleSquareProps"
 import { useHover } from "@mantine/hooks"
 import { ShowTile } from "./ShowTile"
 import { SquareActions } from "./SquareActions"
@@ -25,7 +29,7 @@ export const ShowSingleSquare = ({
     x,
     y,
 }: ShowSingleSquareProps) => {
-    if (!outerSquare || !setOuterSquare)
+    if (!outerSquare)
         throw new Error(
             "expect outer square to be present when rendering a single square",
         )
@@ -33,31 +37,36 @@ export const ShowSingleSquare = ({
         throw new Error(
             "expected x and y to be present when rendering a single square",
         )
-    const flipCopySquare = useCallback(
-        (dx: number, dy: number) => {
-            const newSquares = [
-                ...outerSquare.squares.map((column) => [...column]),
-            ]
-            const [width, height] = [newSquares.length, newSquares[0].length]
-            const [newX, newY] = [
-                (x + dx + width) % width,
-                (y + dy + height) % height,
-            ]
-            newSquares[newX][newY] = {
-                tiles: square.tiles.map((tile) => ({
-                    ...tile,
-                    rotation:
-                        (dy === 0
-                            ? // flip horizontally — need to reverse rotation as well as mirror horizontally
-                              360 - (tile.rotation ?? 0)
-                            : // flip vertically — since mirroring is horizontal, reversing rotation is a little wonkier
-                              360 - (tile.rotation ?? 0) + 180) % 360,
-                    // note that mirroring is horizontal: transform(-1, 1)
-                    mirror: !tile.mirror,
-                })) as OneOrMore<Tile>,
-            }
-            setOuterSquare({ squares: newSquares }) // annotate that arrays are not empty
-        },
+    const flipCopySquare = useMemo(
+        () =>
+            setOuterSquare &&
+            ((dx: number, dy: number) => {
+                const newSquares = [
+                    ...outerSquare.squares.map((column) => [...column]),
+                ]
+                const [width, height] = [
+                    newSquares.length,
+                    newSquares[0].length,
+                ]
+                const [newX, newY] = [
+                    (x + dx + width) % width,
+                    (y + dy + height) % height,
+                ]
+                newSquares[newX][newY] = {
+                    tiles: square.tiles.map((tile) => ({
+                        ...tile,
+                        rotation:
+                            (dy === 0
+                                ? // flip horizontally — need to reverse rotation as well as mirror horizontally
+                                  360 - (tile.rotation ?? 0)
+                                : // flip vertically — since mirroring is horizontal, reversing rotation is a little wonkier
+                                  360 - (tile.rotation ?? 0) + 180) % 360,
+                        // note that mirroring is horizontal: transform(-1, 1)
+                        mirror: !tile.mirror,
+                    })) as OneOrMore<Tile>,
+                }
+                setOuterSquare({ squares: newSquares }) // annotate that arrays are not empty
+            }),
         [outerSquare.squares, setOuterSquare, square.tiles, x, y],
     )
     return (
@@ -79,6 +88,8 @@ const RenderSingleSquare = (props: SingleSquareProps) => {
     const { editingSquare, cancelEditingSquare } = useEditSquare()
     const editingThisSquare = editingSquare === props.square
     const editingAnotherSquare = editingSquare && !editingThisSquare
+    if (editingAnotherSquare && !props.setSquare)
+        throw new Error("Editing requires setSquare to be defined.")
     // const [width, height] = [tiles.length, tiles[0].length]
     // const scaleX = 1 / width
     // const scaleY = 1 / height
@@ -94,13 +105,17 @@ const RenderSingleSquare = (props: SingleSquareProps) => {
                     onClick={cancelEditingSquare}
                 />
             )}
-            {editingThisSquare && <EditSquare {...props} />}
-            {hovered && !editingSquare && <SquareActions {...props} />}
+            {editingThisSquare && isEditSingleSquareProps(props) && (
+                <EditSquare {...props} />
+            )}
+            {hovered && !editingSquare && isEditSingleSquareProps(props) && (
+                <SquareActions {...props} />
+            )}
         </g>
     )
 }
 
-const EditSquare = ({ square, setSquare }: SingleSquareProps) => {
+const EditSquare = ({ square, setSquare }: EditSingleSquareProps) => {
     const buttonRadius = 0.3 * baseLength
     const { palette } = usePalette()
     const { setEditingSquare } = useEditSquare()

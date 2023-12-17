@@ -29,16 +29,16 @@ interface PaletteState {
     setPalette: (palette: Palette, clobber?: boolean) => void
 }
 
+const tni = () => {
+    throw new Error("not implemented")
+}
+
 const defaultPaletteState: PaletteState = {
     palette: new Palette(),
     clobber: false,
     serial: NaN,
-    sortPalette: () => {
-        throw new Error("not implemented")
-    },
-    setPalette: () => {
-        throw new Error("not implemented")
-    },
+    sortPalette: tni,
+    setPalette: tni,
 }
 
 const PaletteContext = createContext(defaultPaletteState)
@@ -76,6 +76,27 @@ export const PaletteProvider = ({
             serial: serial[0]++,
         }),
         [clobber, palette, serial, sortPalette],
+    )
+    return (
+        <PaletteContext.Provider value={state}>
+            {children}
+        </PaletteContext.Provider>
+    )
+}
+
+export const ProvideStaticPalette = ({
+    palette,
+    children,
+}: PropsWithChildren<{ palette: Palette }>) => {
+    const state = useMemo<PaletteState>(
+        () => ({
+            setPalette: tni,
+            sortPalette: tni,
+            palette,
+            clobber: false,
+            serial: NaN,
+        }),
+        [palette],
     )
     return (
         <PaletteContext.Provider value={state}>

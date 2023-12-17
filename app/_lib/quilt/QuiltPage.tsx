@@ -1,16 +1,23 @@
 "use client"
 
-import { PaletteProvider } from "../color/state/PaletteProvider"
+import {
+    PaletteProvider,
+    ProvideStaticPalette,
+} from "../color/state/PaletteProvider"
 import { QuiltControls } from "../color/components/QuiltControls"
 import { QuiltProvider } from "./state/QuiltProvider"
 import { ShowQuilt } from "./components/ShowQuilt"
 import { EditSquareProvider } from "./state/EditSquareProvider"
 import { HistoryProvider } from "../history/HistoryProvider"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { randomTitle } from "../../Titles"
 import { SvgIconButton } from "../color/components/SvgIconButton"
-import { SaveProvider, useSaves } from "../history/SaveProvider"
+import { SaveProvider, SaveRecord, useSaves } from "../history/SaveProvider"
 import { SidePanelH2 } from "../SidePanelH2"
+import { ShowSquare } from "./components/ShowSquare"
+import { Palette } from "../color/Palette"
+import { quiltDimensions } from "./quiltFunctions"
+import { baseLength } from "../square/Paths"
 
 export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
     const [title, setTitle] = useState(initialTitle)
@@ -64,22 +71,42 @@ const AppTitle = ({ initialTitle }: { initialTitle: string }) => {
 }
 
 const RestorePanel = () => {
-    const { saves, restore } = useSaves()
+    const { saves } = useSaves()
     return (
         <>
             <hr />
             <SidePanelH2>Saves</SidePanelH2>
             <div className="grid grid-cols-4 gap-3">
                 {saves.map((save, idx) => (
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => restore(save.timestamp)}
-                        key={idx}
-                    >
-                        {idx}
-                    </button>
+                    <RestoreQuiltButton save={save} key={idx} />
                 ))}
             </div>
         </>
+    )
+}
+
+const RestoreQuiltButton = ({
+    save: { quilt, palette, timestamp },
+}: {
+    save: SaveRecord
+}) => {
+    const { restore } = useSaves()
+    const paletteReal = useMemo(() => Palette.fromJs(palette), [palette])
+    const [width, height] = quiltDimensions(quilt)
+    return (
+        <button
+            className="btn btn-primary m-0 p-0"
+            onClick={() => restore(timestamp)}
+        >
+            <ProvideStaticPalette palette={paletteReal}>
+                <svg
+                    viewBox={`0 0 ${baseLength * width * 2} ${
+                        baseLength * height * 2
+                    }`}
+                >
+                    <ShowSquare square={quilt} />
+                </svg>
+            </ProvideStaticPalette>
+        </button>
     )
 }

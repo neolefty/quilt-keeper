@@ -5,7 +5,7 @@ import { ShowGridOfSquares } from "./ShowGridOfSquares"
 export interface ShowSquareProps {
     square: Square
     // update this square in the larger quilt
-    setSquare: (square: Square) => void
+    setSquare?: (square: Square) => void
     setOuterSquare?: (square: GridOfSquares) => void
     // is this part of a larger quilt?
     outerSquare?: GridOfSquares
