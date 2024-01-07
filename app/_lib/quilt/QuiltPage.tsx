@@ -18,6 +18,7 @@ import { ShowSquare } from "./components/ShowSquare"
 import { Palette } from "../color/Palette"
 import { quiltDimensions } from "./quiltFunctions"
 import { baseLength } from "../square/Paths"
+import clsx from "clsx"
 
 export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
     const [title, setTitle] = useState(initialTitle)
@@ -70,15 +71,21 @@ const AppTitle = ({ initialTitle }: { initialTitle: string }) => {
     )
 }
 
+const saveColumns = 4
+
 const RestorePanel = () => {
     const { saves } = useSaves()
     return (
         <>
             <hr />
             <SidePanelH2>Saves</SidePanelH2>
-            <div className="grid grid-cols-4 gap-3">
+            <div className={`grid gap-3 grid-cols-${saveColumns}`}>
                 {saves.map((save, idx) => (
-                    <RestoreQuiltButton save={save} key={idx} />
+                    <RestoreQuiltButton
+                        save={save}
+                        key={idx}
+                        maxColumns={saveColumns}
+                    />
                 ))}
             </div>
         </>
@@ -87,15 +94,23 @@ const RestorePanel = () => {
 
 const RestoreQuiltButton = ({
     save: { quilt, palette, timestamp },
+    maxColumns,
 }: {
     save: SaveRecord
+    maxColumns: number
 }) => {
     const { restore } = useSaves()
     const paletteReal = useMemo(() => Palette.fromJs(palette), [palette])
     const [width, height] = quiltDimensions(quilt)
+    const columns = Math.min(Math.round(width / 4), maxColumns)
+    const rows = Math.round((columns * height) / width)
     return (
         <button
-            className="btn btn-primary m-0 p-0"
+            className={clsx(
+                "btn btn-primary m-0 p-0",
+                `col-span-${columns}`,
+                `row-span-${rows}`,
+            )}
             onClick={() => restore(timestamp)}
         >
             <ProvideStaticPalette palette={paletteReal}>
