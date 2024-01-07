@@ -22,9 +22,9 @@ import {
     quiltDimensions,
     redistributeColors,
 } from "../quiltFunctions"
-import { useSizeFromUrlParams } from "../../useSizeFromUrlParams"
+import { useInitializedQuilt } from "./useInitializedQuilt"
 
-interface QuiltState {
+export interface QuiltState {
     quilt: GridOfSquares
     // if true, overwrite the previous state in undo history
     clobber: boolean
@@ -71,20 +71,11 @@ export const QuiltProvider = ({
     defaultQuiltSize?: Pair<number>
     serial: [number]
 }>) => {
-    const { palette } = usePalette()
+    const { palette, setPalette } = usePalette()
     const [{ quilt, clobber }, setQuilt] = useState({
         quilt: defaultQuiltState.quilt,
         clobber: false,
     })
-    const [width, height] = useSizeFromUrlParams(defaultQuiltSize)
-    useEffect(() => {
-        if (quilt === defaultQuiltState.quilt && palette.length > 0) {
-            setQuilt({
-                quilt: createRandomQuilt(width, height, palette),
-                clobber: true,
-            })
-        }
-    }, [width, height, palette, quilt])
     // separate memo of static state items to avoid updating serial number when palette changes
     const staticQuilt = useMemo(
         () => ({
@@ -117,6 +108,7 @@ export const QuiltProvider = ({
         }),
         [palette, quilt, staticQuilt],
     )
+    useInitializedQuilt(quiltState, defaultQuiltSize)
     // when a color is removed from the palette, re-color affected tiles
     useEffect(() => {
         if (palette.length === 0 || quilt === defaultQuiltState.quilt) return

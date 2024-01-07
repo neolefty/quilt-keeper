@@ -117,7 +117,6 @@ const loadSavesFromLocalStorage = (): FullSave => {
     try {
         const result = JSON.parse(saves)
         if (Value.Check(FullSaveSchema, result)) return result
-        console.log("loaded saves", { saves, result })
         return result
     } catch (e) {
         console.warn("failed to load saves", { saves, e })
