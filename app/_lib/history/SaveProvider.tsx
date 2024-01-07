@@ -1,6 +1,5 @@
 import stringify from "fast-json-stable-stringify"
-import { GridOfSquaresSchema } from "../square/Square"
-import { Palette, PaletteJsSchema } from "../color/Palette"
+import { Palette } from "../color/Palette"
 import {
     createContext,
     PropsWithChildren,
@@ -14,25 +13,7 @@ import { Static, Type } from "@sinclair/typebox"
 import { Value } from "@sinclair/typebox/value"
 import { usePalette } from "../color/state/PaletteProvider"
 import { useQuilt } from "../quilt/state/QuiltProvider"
-
-// Another possible library: typescript-json: https://dev.to/samchon/i-made-10x-faster-jsonstringify-functions-even-type-safe-2eme
-export const SaveRecordSchema = Type.Object({
-    palette: PaletteJsSchema,
-    quilt: GridOfSquaresSchema,
-    version: Type.Number(),
-    timestamp: Type.Number(),
-})
-/**
- * A record of a quilt design, as a plain JS object that can be serialized
- * to JSON and validated by TypeBox.
- */
-export type SaveRecord = Static<typeof SaveRecordSchema>
-// interface SaveRecord {
-//     palette: PaletteJS
-//     quilt: GridOfSquares
-//     version: number
-//     timestamp: number
-// }
+import { SaveRecord, SaveRecordSchema, toSaveRecord } from "./SaveRecord"
 
 // The state saved in localStorage["saves"]
 const FullSaveSchema = Type.Array(SaveRecordSchema)
@@ -84,12 +65,7 @@ export const SaveProvider = ({ children }: PropsWithChildren) => {
                 }
                 try {
                     savingRef.current = true
-                    const newRecord: SaveRecord = {
-                        palette: palette.toJs(),
-                        quilt,
-                        version: 1,
-                        timestamp: Date.now(),
-                    }
+                    const newRecord = toSaveRecord(palette, quilt)
                     const prevRecord = saves[0]
                     let isDuplicate = false
                     if (prevRecord) {

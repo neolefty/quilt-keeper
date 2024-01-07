@@ -1,3 +1,4 @@
+// Another possible library: typescript-json: https://dev.to/samchon/i-made-10x-faster-jsonstringify-functions-even-type-safe-2eme
 import { Static, Type } from "@sinclair/typebox"
 
 export const TemplatePathSchema = Type.Object({

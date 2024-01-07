@@ -12,13 +12,14 @@ import { HistoryProvider } from "../history/HistoryProvider"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { randomTitle } from "../../Titles"
 import { SvgIconButton } from "../color/components/SvgIconButton"
-import { SaveProvider, SaveRecord, useSaves } from "../history/SaveProvider"
+import { SaveProvider, useSaves } from "../history/SaveProvider"
 import { SidePanelH2 } from "../SidePanelH2"
 import { ShowSquare } from "./components/ShowSquare"
 import { Palette } from "../color/Palette"
 import { quiltDimensions } from "./quiltFunctions"
 import { baseLength } from "../square/Paths"
 import clsx from "clsx"
+import { SaveRecord } from "../history/SaveRecord"
 
 export const QuiltPage = ({ initialTitle }: { initialTitle: string }) => {
     const [title, setTitle] = useState(initialTitle)
