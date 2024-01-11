@@ -65,14 +65,7 @@ const useSquareActions = ({
                 d6: () => setSquare(createRandomSquare(palette)),
             }),
         }),
-        [
-            palette,
-            editingSquare,
-            flipCopySquare,
-            setEditingSquare,
-            setSquare,
-            square,
-        ],
+        [palette, flipCopySquare, setSquare, square],
     )
 }
 
