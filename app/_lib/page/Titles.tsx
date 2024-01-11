@@ -1,5 +1,5 @@
 // From https://chat.openai.com/share/e6f2f6b5-6d26-4264-8703-0f48da1976a3
-import { numberRange } from "./_lib/quilt/quiltFunctions"
+import { numberRange } from "../quilt/quiltFunctions"
 
 const titles = {
     PatchPerfect: 6, // weight my faves

@@ -1,5 +1,5 @@
 import { QuiltPage } from "./_lib/quilt/QuiltPage"
-import { initialTitle, randomTitle } from "./Titles"
+import { initialTitle, randomTitle } from "./_lib/page/Titles"
 
 export default function Home() {
     return (

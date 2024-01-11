@@ -6,7 +6,7 @@ import { SvgIconButton } from "./SvgIconButton"
 import { Palette } from "../Palette"
 import { useHistory } from "../../history/HistoryProvider"
 import { useSaves } from "../../history/SaveProvider"
-import { SidePanelH2 } from "../../SidePanelH2"
+import { SidePanelH2 } from "../../page/SidePanelH2"
 
 export const QuiltControlButtons = () => {
     const { palette, sortPalette } = usePalette()

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { initialTitle, randomTitle } from "./Titles"
+import { initialTitle } from "./_lib/page/Titles"
 
 const inter = Inter({ subsets: ["latin"] })
 

@@ -7,9 +7,11 @@ export const QuiltControls = () => {
     return (
         <div className="grid gap-3">
             <QuiltControlButtons />
-            {palette.driftColors.map((color, idx) => (
-                <ColorCard color={color} idx={idx} key={idx} />
-            ))}
+            <div className="scroll-auto:overflow-y flex flex-col gap-3">
+                {palette.driftColors.map((color, idx) => (
+                    <ColorCard color={color} idx={idx} key={idx} />
+                ))}
+            </div>
         </div>
     )
 }
