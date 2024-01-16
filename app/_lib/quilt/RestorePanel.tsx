@@ -2,7 +2,7 @@ import { useSaves } from "../history/SaveProvider"
 import { SidePanelH2 } from "../page/SidePanelH2"
 import { RestoreQuiltButton } from "./RestoreQuiltButton"
 
-const saveColumns = 4
+const saveColumns = 6
 
 export const RestorePanel = () => {
     const { saves } = useSaves()
