@@ -15,6 +15,7 @@ export const RestorePanel = () => {
                 className={`grid overflow-y-auto gap-3 grid-cols-${saveColumns}`}
                 style={{
                     minHeight: `${minHeight}rem`,
+                    // leave room for the rest of the left-side panel
                     maxHeight: `calc(100vh - 30rem)`,
                 }}
             >

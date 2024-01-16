@@ -18,15 +18,22 @@ export const RestoreQuiltButton = ({
     const { restore } = useSaves()
     const paletteReal = useMemo(() => Palette.fromJs(palette), [palette])
     const [width, height] = quiltDimensions(quilt)
-    const columns = Math.min(Math.round(width / 4), maxColumns)
-    const rows = Math.round((columns * height) / width)
+    const columns = Math.min(Math.round(width / 2), maxColumns)
+    const rows = Math.round((height * columns) / width)
+    const maxWidthRem = 10
+    // Safari & Firefox want w-auto h-full
+    // Chrome & Firefox want nothing
+    // TODO: manually flow & place saves using notation grid-area n / n / n / n https://developer.mozilla.org/en-US/docs/Web/CSS/grid-area
     return (
         <button
             className={clsx(
-                "btn btn-primary m-0 p-0",
-                `col-span-${columns}`,
-                `row-span-${rows}`,
+                "save-button hover:scale-90 transition-transform duration-200 ease-in-out",
             )}
+            style={{
+                // gridArea: `span ${rows} / span ${columns}`,
+                gridColumn: `span ${columns}`,
+                gridRow: `span ${rows}`,
+            }}
             onClick={() => restore(timestamp)}
         >
             <ProvideStaticPalette palette={paletteReal}>
@@ -34,6 +41,10 @@ export const RestoreQuiltButton = ({
                     viewBox={`0 0 ${baseLength * width * 2} ${
                         baseLength * height * 2
                     }`}
+                    className="w-auto h-full"
+                    style={{
+                        maxWidth: `${(maxWidthRem * width) / maxColumns}rem`,
+                    }}
                 >
                     <ShowSquare square={quilt} />
                 </svg>
